@@ -1,106 +1,115 @@
-import React from "react";
-import { Button, Typography } from "@mui/material";
-//Images
-import coverImage from "../assets/Images/signIn.png";
-import faceBookIcon from "../assets/Images/facebook.png";
-import googleIcon from "../assets/Images/google.png";
+import React, { useState } from "react";
+import {
+  AppBar,
+  Toolbar,
+  Typography,
+  Tabs,
+  Tab,
+  Button,
+  IconButton,
+  Drawer,
+  List,
+  ListItem,
+  ListItemText,
+  Box,
+} from "@mui/material";
+import MenuIcon from "@mui/icons-material/Menu";
+import brewLogo from "../assets/Images/breLogoBlack.png";
+import ArrowOutwardIcon from "@mui/icons-material/ArrowOutward";
 const Nav = () => {
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const handleDrawerToggle = () => {
+    setDrawerOpen(!drawerOpen);
+  };
   return (
-    <div
-      style={{
-        height: "100vh",
-        display: "flex",
-        flexDirection: "row",
-      }}
+    <AppBar
+      position="static"
+      sx={{ backgroundColor: "#FFFFFF", py: 2, boxShadow: "none" }}
     >
-      <div style={{ height: "100vh", width: "50%" }}>
-        <img
-          src={coverImage}
-          alt="waiting..."
-          style={{ height: "99.6vh", width: "auto" }}
-        />
-      </div>
-      <div
-        style={{
-          height: "100vh",
-          width: "50%",
+      <Toolbar
+        sx={{
           display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          position: "relative",
+          justifyContent: "space-between",
+          marginX: "8%",
         }}
       >
-        <div
-          style={{
-            position: "absolute",
-            right: "10%",
-            top: "3%",
-            display: "flex",
-            flexDirection: "row",
-            alignItems: "center",
-          }}
-        >
-          <Typography variant="body1">New User?</Typography>
-          <a href="#" style={{ textDecoration: "none" }}>
-            <Typography variant="body1">Create an account</Typography>
-          </a>
-        </div>
+        <img
+          src={brewLogo}
+          alt="nothing"
+          style={{ height: "3rem", width: "10vw", color: "#000" }}
+        />
 
-        <div style={{ height: "50%", width: "80%", backgroundColor: "#fff" }}>
-          <Typography variant="h5" fontWeight={"700"}>
-            SignIn
-          </Typography>
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              alignItems: "center",
-              gap: "15px",
-              margin: " 25px 0px 25px 0px ",
-            }}
+        {/* Tabs for larger screens */}
+        <Box sx={{ display: { xs: "none", sm: "block" } }}>
+          <Tabs value={false}>
+            <Tab
+              label="About"
+              sx={{ color: "#000000", fontFamily: "Poppins" }}
+            />
+            <Tab
+              label="Blog"
+              sx={{ color: "#000000", fontFamily: "Poppins" }}
+            />
+            <Tab
+              label="Contact"
+              sx={{ color: "#000000", fontFamily: "Poppins" }}
+            />
+            <Button
+              variant="contained"
+              sx={{
+                ml: 4,
+                borderColor: "#000000",
+                backgroundColor: "#FF6F61",
+                color: "#F0F0F0",
+                borderRadius: "20px",
+                width: "150px",
+                height: "40px",
+                fontFamily: "Poppins",
+              }}
+              endIcon={<ArrowOutwardIcon />}
+            >
+              Sign In
+            </Button>
+          </Tabs>
+        </Box>
+
+        {/* Hamburger menu for smaller screens */}
+        <Box sx={{ display: { xs: "block", sm: "none" } }}>
+          <IconButton
+            edge="end"
+            color="inherit"
+            aria-label="menu"
+            onClick={handleDrawerToggle}
+            sx={{ color: "#000000" }}
           >
+            <MenuIcon />
+          </IconButton>
+        </Box>
+      </Toolbar>
+
+      {/* Drawer for mobile */}
+      <Drawer anchor="right" open={drawerOpen} onClose={handleDrawerToggle}>
+        <List sx={{ width: 250 }}>
+          <ListItem button onClick={handleDrawerToggle}>
+            <ListItemText primary="About" sx={{ fontFamily: "Poppins" }} />
+          </ListItem>
+          <ListItem button onClick={handleDrawerToggle}>
+            <ListItemText primary="Blog" sx={{ fontFamily: "Poppins" }} />
+          </ListItem>
+          <ListItem button onClick={handleDrawerToggle}>
+            <ListItemText primary="Contact" sx={{ fontFamily: "Poppins" }} />
+          </ListItem>
+          <ListItem button onClick={handleDrawerToggle}>
             <Button
               variant="contained"
-              sx={{
-                backgroundColor: "#FF7164",
-                width: "40%",
-                height: "10%",
-                textTransform: "none",
-                borderRadius: "15px",
-                fontWeight: "500",
-              }}
+              sx={{ width: "100%", fontFamily: "Poppins" }}
             >
-              <img
-                src={googleIcon}
-                style={{ height: "17px", marginRight: "10px" }}
-              />
-              Sign in with Google
+              Sign In
             </Button>
-            <Button
-              variant="contained"
-              sx={{
-                backgroundColor: "#fff",
-                width: "30%",
-                height: "10%",
-                textTransform: "none",
-                borderRadius: "15px",
-                color: "#6149CD",
-                fontWeight: "500",
-              }}
-            >
-              <img
-                src={faceBookIcon}
-                style={{ height: "17px", marginRight: "10px" }}
-              />
-              with facebook
-            </Button>
-          </div>
-          <Typography variant="body2" color="#8A8A8A">
-            Or sign in using your email address
-          </Typography>
-        </div>
-      </div>
-    </div>
+          </ListItem>
+        </List>
+      </Drawer>
+    </AppBar>
   );
 };
 

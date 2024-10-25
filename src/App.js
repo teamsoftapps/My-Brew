@@ -1,10 +1,17 @@
 import React from "react";
-import Nav from "./components/Navbar";
+
+import Home from "./Screens/Home";
+import SignUp from "./Screens/signUp";
+import SignIn from "./Screens/SignIn";
 
 const App = () => {
   return (
     <>
-      <Nav />
+      {/* <SignIn /> */}
+      <Home />
+      {/* <SignUp /> */}
+      {/* <Nav />
+      <Footer /> */}
     </>
   );
 };
