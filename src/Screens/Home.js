@@ -8,7 +8,9 @@ import leave_03 from "../assets/Images/leave_03.png";
 import leave_04 from "../assets/Images/leave_04.png";
 import Nav from "../components/Navbar";
 import Footer from "../components/Footer";
+import { useNavigate } from "react-router-dom";
 const Home = () => {
+  const navigation = useNavigate();
   return (
     <Box sx={{ backgroundColor: "#F8F9FA" }}>
       <Nav />
@@ -41,6 +43,9 @@ const Home = () => {
             the world.
           </Typography>
           <Button
+            onClick={() => {
+              navigation("/BrewCollection");
+            }}
             variant="outlined"
             sx={{
               ml: 4,

@@ -16,15 +16,33 @@ import {
 import MenuIcon from "@mui/icons-material/Menu";
 import brewLogo from "../assets/Images/breLogoBlack.png";
 import ArrowOutwardIcon from "@mui/icons-material/ArrowOutward";
+import { useNavigate } from "react-router-dom";
+
 const Nav = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const navigation = useNavigate();
+
   const handleDrawerToggle = () => {
     setDrawerOpen(!drawerOpen);
   };
+
+  const handleSignIn = () => {
+    navigation("/SignIn");
+  };
+
+  const handleNavigate = (path) => {
+    navigation(path);
+    setDrawerOpen(false); // Close the drawer after navigation
+  };
+
   return (
     <AppBar
       position="static"
-      sx={{ backgroundColor: "#FFFFFF", py: 2, boxShadow: "none" }}
+      sx={{
+        backgroundColor: "#FFFFFF",
+        py: 2,
+        boxShadow: "none",
+      }}
     >
       <Toolbar
         sx={{
@@ -35,8 +53,13 @@ const Nav = () => {
       >
         <img
           src={brewLogo}
-          alt="nothing"
-          style={{ height: "3rem", width: "10vw", color: "#000" }}
+          alt="Logo"
+          style={{
+            maxWidth: "150px", // Adjust the maxWidth as needed
+            width: "100%",
+            height: "auto",
+            objectFit: "contain",
+          }}
         />
 
         {/* Tabs for larger screens */}
@@ -45,16 +68,20 @@ const Nav = () => {
             <Tab
               label="About"
               sx={{ color: "#000000", fontFamily: "Poppins" }}
+              onClick={() => handleNavigate("/about")}
             />
             <Tab
               label="Blog"
               sx={{ color: "#000000", fontFamily: "Poppins" }}
+              onClick={() => handleNavigate("/blog")}
             />
             <Tab
               label="Contact"
               sx={{ color: "#000000", fontFamily: "Poppins" }}
+              onClick={() => handleNavigate("/contact")}
             />
             <Button
+              onClick={handleSignIn}
               variant="contained"
               sx={{
                 ml: 4,
@@ -90,18 +117,19 @@ const Nav = () => {
       {/* Drawer for mobile */}
       <Drawer anchor="right" open={drawerOpen} onClose={handleDrawerToggle}>
         <List sx={{ width: 250 }}>
-          <ListItem button onClick={handleDrawerToggle}>
+          <ListItem button onClick={() => handleNavigate("/about")}>
             <ListItemText primary="About" sx={{ fontFamily: "Poppins" }} />
           </ListItem>
-          <ListItem button onClick={handleDrawerToggle}>
+          <ListItem button onClick={() => handleNavigate("/blog")}>
             <ListItemText primary="Blog" sx={{ fontFamily: "Poppins" }} />
           </ListItem>
-          <ListItem button onClick={handleDrawerToggle}>
+          <ListItem button onClick={() => handleNavigate("/contact")}>
             <ListItemText primary="Contact" sx={{ fontFamily: "Poppins" }} />
           </ListItem>
-          <ListItem button onClick={handleDrawerToggle}>
+          <ListItem button>
             <Button
               variant="contained"
+              onClick={handleSignIn}
               sx={{ width: "100%", fontFamily: "Poppins" }}
             >
               Sign In

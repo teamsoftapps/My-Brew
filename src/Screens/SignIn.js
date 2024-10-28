@@ -13,17 +13,18 @@ import googleIcon from "../assets/Images/google.png";
 import faceBookIcon from "../assets/Images/facebook.png";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import ArrowOutwardIcon from "@mui/icons-material/ArrowOutward";
+import { useNavigate } from "react-router-dom";
+
 const SignIn = () => {
   const [showPassword, setShowPassword] = React.useState(false);
   const [rememberMe, setRememberMe] = useState(false);
+  const navigation = useNavigate();
   const handleTogglePasswordVisibility = () => {
     setShowPassword((prev) => !prev);
   };
   const handleRememberMeChange = (event) => {
     setRememberMe(event.target.checked);
   };
-
   return (
     <div
       style={{
@@ -62,9 +63,15 @@ const SignIn = () => {
           <Typography variant="body2" color="#8A8A8A">
             New User?
           </Typography>
-          <a href="#" style={{ textDecoration: "none" }}>
-            <Typography variant="body2">Create an account</Typography>
-          </a>
+          <Typography
+            style={{ cursor: "pointer" }}
+            variant="body2"
+            onClick={() => {
+              navigation("/SignUp");
+            }}
+          >
+            Create an account
+          </Typography>
         </div>
 
         <div style={{ height: "50%", width: "60%", backgroundColor: "#fff" }}>
@@ -210,6 +217,9 @@ const SignIn = () => {
           </Box>
           <Box>
             <Button
+              onClick={() => {
+                navigation("/Home");
+              }}
               variant="contained"
               sx={{
                 borderColor: "#000000",

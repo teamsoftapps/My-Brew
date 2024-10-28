@@ -13,9 +13,11 @@ import googleIcon from "../assets/Images/google.png";
 import faceBookIcon from "../assets/Images/facebook.png";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import { useNavigate } from "react-router-dom";
 const SignUp = () => {
   const [showPassword, setShowPassword] = React.useState(false);
   const [rememberMe, setRememberMe] = useState(false);
+  const navigation = useNavigate();
   const handleTogglePasswordVisibility = () => {
     setShowPassword((prev) => !prev);
   };
@@ -59,11 +61,18 @@ const SignUp = () => {
           }}
         >
           <Typography variant="body2" color="#8A8A8A">
-            New User?
+            Alredy a member?
           </Typography>
-          <a href="#" style={{ textDecoration: "none" }}>
-            <Typography variant="body2">Create an account</Typography>
-          </a>
+
+          <Typography
+            style={{ cursor: "pointer" }}
+            onClick={() => {
+              navigation("/SignIn");
+            }}
+            variant="body2"
+          >
+            Sign In
+          </Typography>
         </div>
 
         <div style={{ height: "50%", width: "60%", backgroundColor: "#fff" }}>
@@ -268,6 +277,9 @@ const SignUp = () => {
           </Box>
           <Box>
             <Button
+              onClick={() => {
+                navigation("/Home");
+              }}
               variant="contained"
               sx={{
                 borderColor: "#000000",

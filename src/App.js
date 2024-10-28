@@ -1,17 +1,11 @@
 import React from "react";
 
-import Home from "./Screens/Home";
-import SignUp from "./Screens/signUp";
-import SignIn from "./Screens/SignIn";
+import MainStack from "./navigation/mainStack";
 
 const App = () => {
   return (
     <>
-      {/* <SignIn /> */}
-      <Home />
-      {/* <SignUp /> */}
-      {/* <Nav />
-      <Footer /> */}
+      <MainStack />
     </>
   );
 };
