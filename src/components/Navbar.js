@@ -2,9 +2,6 @@ import React, { useState } from "react";
 import {
   AppBar,
   Toolbar,
-  Typography,
-  Tabs,
-  Tab,
   Button,
   IconButton,
   Drawer,
@@ -12,6 +9,7 @@ import {
   ListItem,
   ListItemText,
   Box,
+  Grid,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import brewLogo from "../assets/Images/breLogoBlack.png";
@@ -44,74 +42,107 @@ const Nav = () => {
         boxShadow: "none",
       }}
     >
-      <Toolbar
-        sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          marginX: "8%",
-        }}
-      >
-        <img
-          src={brewLogo}
-          alt="Logo"
-          style={{
-            maxWidth: "150px", // Adjust the maxWidth as needed
-            width: "100%",
-            height: "auto",
-            objectFit: "contain",
-          }}
-        />
-
-        {/* Tabs for larger screens */}
-        <Box sx={{ display: { xs: "none", sm: "block" } }}>
-          <Tabs value={false}>
-            <Tab
-              label="About"
-              sx={{ color: "#000000", fontFamily: "Poppins" }}
-              onClick={() => handleNavigate("/about")}
-            />
-            <Tab
-              label="Blog"
-              sx={{ color: "#000000", fontFamily: "Poppins" }}
-              onClick={() => handleNavigate("/blog")}
-            />
-            <Tab
-              label="Contact"
-              sx={{ color: "#000000", fontFamily: "Poppins" }}
-              onClick={() => handleNavigate("/contact")}
-            />
-            <Button
-              onClick={handleSignIn}
-              variant="contained"
+      <Toolbar>
+        <Grid
+          container
+          spacing={2}
+          justifyContent="space-between"
+          alignItems="center"
+          px={{ xs: 2, sm: 2, md: 4 }}
+        >
+          {/* Logo */}
+          <Grid item xs={4} sm={2} md={2}>
+            <Box
               sx={{
-                ml: 4,
-                borderColor: "#000000",
-                backgroundColor: "#FF6F61",
-                color: "#F0F0F0",
-                borderRadius: "20px",
-                width: "150px",
-                height: "40px",
-                fontFamily: "Poppins",
+                maxWidth: { xs: "110px", sm: "140px", md: "220px" },
+                width: "100%",
+                height: "auto",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
               }}
-              endIcon={<ArrowOutwardIcon />}
             >
-              Sign In
-            </Button>
-          </Tabs>
-        </Box>
+              <img
+                src={brewLogo}
+                alt="Logo"
+                style={{
+                  width: "100%",
+                  height: "auto",
+                  objectFit: "contain",
+                }}
+              />
+            </Box>
+          </Grid>
 
-        {/* Hamburger menu for smaller screens */}
-        <Box sx={{ display: { xs: "block", sm: "none" } }}>
-          <IconButton
-            edge="end"
-            color="inherit"
-            aria-label="menu"
-            onClick={handleDrawerToggle}
-            sx={{ color: "#000000" }}
+          {/* Tabs for larger screens */}
+          <Grid
+            item
+            sm={8} // Show on small screens and up
+            md={8}
+            sx={{
+              display: { xs: "none", sm: "flex" },
+              justifyContent: "flex-end",
+              alignItems: "center",
+            }} // Use flex to align items
           >
-            <MenuIcon />
-          </IconButton>
-        </Box>
+            <Box sx={{ display: "flex", alignItems: "center" }}>
+              {" "}
+              {/* Flexbox for horizontal alignment */}
+              <Button
+                onClick={() => handleNavigate("/about")}
+                sx={{ color: "#000000", fontFamily: "Poppins" }}
+              >
+                About
+              </Button>
+              <Button
+                onClick={() => handleNavigate("/blog")}
+                sx={{ color: "#000000", fontFamily: "Poppins", mx: 2 }}
+              >
+                Blog
+              </Button>
+              <Button
+                onClick={() => handleNavigate("/contact")}
+                sx={{ color: "#000000", fontFamily: "Poppins" }}
+              >
+                Contact
+              </Button>
+              <Button
+                onClick={handleSignIn}
+                variant="contained"
+                sx={{
+                  ml: 4,
+                  borderColor: "#000000",
+                  backgroundColor: "#FF6F61",
+                  color: "#F0F0F0",
+                  borderRadius: "20px",
+                  width: "150px",
+                  height: "40px",
+                  fontFamily: "Poppins",
+                }}
+                endIcon={<ArrowOutwardIcon />}
+              >
+                Sign In
+              </Button>
+            </Box>
+          </Grid>
+
+          {/* Hamburger menu for small screens */}
+          <Grid
+            item
+            xs={2}
+            sx={{ display: { xs: "block", sm: "none" } }} // Show on xs only
+          >
+            <IconButton
+              edge="end"
+              color="inherit"
+              aria-label="menu"
+              onClick={handleDrawerToggle}
+              sx={{ color: "#000000" }}
+            >
+              <MenuIcon />
+            </IconButton>
+          </Grid>
+        </Grid>
       </Toolbar>
 
       {/* Drawer for mobile */}

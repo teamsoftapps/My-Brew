@@ -4,10 +4,10 @@ import Nav from "../components/Navbar";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
+import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
 import filterPng from "../assets/Images/filter.png";
 import cardImg from "../assets/Images/cardImg.png";
 import Footer from "../components/Footer";
-import { useNavigate } from "react-router-dom";
 const Cats = [
   { id: 1, value: "ALL" },
   { id: 2, value: "TASTING" },
@@ -56,10 +56,9 @@ const cards = [
     img: cardImg,
   },
 ];
-const BrewCollection = () => {
+const ExploreBrews = () => {
   const [selectedCat, setSelectedCat] = useState(0);
   const [hoveredIndex, setHoveredIndex] = useState(null);
-  const navigation = useNavigate();
   return (
     <Box>
       <Nav />
@@ -90,17 +89,21 @@ const BrewCollection = () => {
                 fontSize: { xs: "3rem", sm: "2rem", md: "3.5rem" },
               }}
             >
-              My Brew Collection
+              Explore Your Brews
             </Typography>
             <Typography
               variant="body1"
               sx={{
                 textAlign: "center",
-                fontSize: { xs: 15, sm: "0.7rem", md: "1rem" },
+                fontSize: { xs: 15, sm: 15, md: 20 },
                 color: "gray",
+                maxWidth: { xs: "90%", md: "40%" },
+                // px: { sm: 50, md: 66 },
               }}
             >
-              Track, edit, and showcase your unique creations.
+              Browse through your crafted brews with a detailed, read-only view.
+              Each brew tells a story—see your collection at a glance, complete
+              with all the essential details.
             </Typography>
           </Grid>
         </Grid>
@@ -176,9 +179,6 @@ const BrewCollection = () => {
               }}
             />
             <Button
-              onClick={() => {
-                navigation("/ExploreBrews");
-              }}
               variant="contained"
               sx={{
                 backgroundColor: "#031D2D",
@@ -189,14 +189,14 @@ const BrewCollection = () => {
                   },
                 },
                 padding: { xs: "0.5rem 1rem", sm: "0.6rem 2rem" },
-                position: { xs: "fixed", sm: "fixed", md: "static" }, // Float only on xs and sm
-                right: { xs: "1rem", sm: "2rem" }, // Position from the right
-                bottom: { xs: "1rem", sm: "2rem" }, // Position from the bottom
+                position: { xs: "fixed", sm: "fixed", md: "static" },
+                right: { xs: "1rem", sm: "2rem" },
+                bottom: { xs: "1rem", sm: "2rem" },
                 borderRadius: "1.5rem",
                 maxWidth: "100%",
                 minWidth: { xs: "0", sm: "15rem" },
                 transition: "background-color 0.3s ease",
-                zIndex: 1000, // Ensure the button stays on top of other elements
+                zIndex: 1000,
                 "@keyframes rotate": {
                   "0%": {
                     transform: "rotate(0deg)",
@@ -283,6 +283,16 @@ const BrewCollection = () => {
                   >
                     <IconButton
                       sx={{
+                        display: "none",
+                        backgroundColor: "#EBEDEF",
+                      }}
+                      aria-label="Heart"
+                    >
+                      <FavoriteBorderOutlinedIcon sx={{ color: "#031D2D" }} />
+                    </IconButton>
+                    <IconButton
+                      sx={{
+                        display: "none",
                         backgroundColor: "#F6D9D6",
                         "&:hover": {
                           backgroundColor: "#FFE2DF",
@@ -294,6 +304,7 @@ const BrewCollection = () => {
                     </IconButton>
                     <IconButton
                       sx={{
+                        display: { xs: "none", md: "flex" },
                         backgroundColor: "#E1E3E5",
                         "&:hover": {
                           backgroundColor: "#CDD2D5",
@@ -408,4 +419,4 @@ const BrewCollection = () => {
   );
 };
 
-export default BrewCollection;
+export default ExploreBrews;

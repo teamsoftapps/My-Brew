@@ -5,6 +5,7 @@ import Home from "../Screens/Home";
 import SignIn from "../Screens/SignIn";
 import SignUp from "../Screens/signUp";
 import BrewCollection from "../Screens/BrewCollection";
+import ExploreBrews from "../Screens/ExploreBrews";
 
 const MainStack = () => {
   return (
@@ -14,6 +15,7 @@ const MainStack = () => {
         <Route path="/SignIn" element={<SignIn />} />
         <Route path="/Home" element={<Home />} />
         <Route path="/BrewCollection" element={<BrewCollection />} />
+        <Route path="/ExploreBrews" element={<ExploreBrews />} />
       </Routes>
     </Router>
   );
