@@ -62,7 +62,6 @@ const BrewCollection = () => {
   const navigation = useNavigate();
   return (
     <Box>
-      <Nav />
       <Box
         sx={{
           px: { xs: "1rem", sm: "2rem", md: "4rem", lg: "6rem" },

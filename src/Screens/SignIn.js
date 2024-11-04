@@ -18,7 +18,7 @@ import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { useNavigate } from "react-router-dom";
 
-const SignUp = () => {
+const SignIn = ({ onSignIn }) => {
   const [showPassword, setShowPassword] = React.useState(false);
   const [rememberMe, setRememberMe] = useState(false);
   const navigation = useNavigate();
@@ -27,6 +27,11 @@ const SignUp = () => {
   };
   const handleRememberMeChange = (event) => {
     setRememberMe(event.target.checked);
+  };
+  const handleSignIn = (e) => {
+    e.preventDefault();
+    onSignIn();
+    navigation("/Home");
   };
   return (
     <Grid
@@ -286,9 +291,7 @@ const SignUp = () => {
           </Box>
           <Box>
             <Button
-              onClick={() => {
-                navigation("/Home");
-              }}
+              onClick={handleSignIn}
               variant="contained"
               sx={{
                 width: { xs: "100%", md: "50%" },
@@ -328,4 +331,4 @@ const SignUp = () => {
   );
 };
 
-export default SignUp;
+export default SignIn;

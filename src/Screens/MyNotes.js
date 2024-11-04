@@ -216,7 +216,6 @@ const MyNotes = () => {
 
   return (
     <Grid container sx={{ backgroundColor: "#F8F9FA" }}>
-      <Nav />
       <Grid
         container
         sx={{

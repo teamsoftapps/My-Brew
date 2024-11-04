@@ -12,10 +12,9 @@ import { useNavigate } from "react-router-dom";
 import "../styles/home.css";
 const Home = () => {
   const navigation = useNavigate();
+
   return (
     <Box sx={{ backgroundColor: "#F8F9FA" }}>
-      <Nav />
-      {/* get Started */}
       <Grid
         container
         spacing={2}

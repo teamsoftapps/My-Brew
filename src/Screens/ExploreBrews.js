@@ -8,6 +8,7 @@ import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlin
 import filterPng from "../assets/Images/filter.png";
 import cardImg from "../assets/Images/cardImg.png";
 import Footer from "../components/Footer";
+import { useLocation } from "react-router-dom";
 const Cats = [
   { id: 1, value: "ALL" },
   { id: 2, value: "TASTING" },
@@ -56,13 +57,11 @@ const cards = [
     img: cardImg,
   },
 ];
-const ExploreBrews = () => {
+const ExploreBrews = ({ route }) => {
   const [selectedCat, setSelectedCat] = useState(0);
   const [hoveredIndex, setHoveredIndex] = useState(null);
-  const [isLiked, setIsLiked] = useState(false);
   return (
     <Box>
-      <Nav />
       <Box
         sx={{
           px: { xs: "1rem", sm: "2rem", md: "4rem", lg: "6rem" },

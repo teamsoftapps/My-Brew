@@ -1,25 +1,25 @@
-// App.js
+// MainStack.js
 import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import Home from "../Screens/Home";
-import SignIn from "../Screens/SignIn";
-import SignUp from "../Screens/signUp";
 import BrewCollection from "../Screens/BrewCollection";
 import ExploreBrews from "../Screens/ExploreBrews";
 import MyNotes from "../Screens/MyNotes";
+import Navbar from "../components/Navbar"; // Adjust the path as necessary
 
-const MainStack = () => {
+const MainStack = ({ isAuthenticated, onLogout }) => {
   return (
-    <Router>
+    <>
+      <Navbar isAuthenticated={isAuthenticated} onLogout={onLogout} />
+      {/* Pass isAuthenticated to Navbar */}
       <Routes>
-        <Route path="/" element={<SignUp />} />
-        <Route path="/SignIn" element={<SignIn />} />
         <Route path="/Home" element={<Home />} />
         <Route path="/BrewCollection" element={<BrewCollection />} />
         <Route path="/ExploreBrews" element={<ExploreBrews />} />
         <Route path="/MyNotes" element={<MyNotes />} />
+        <Route path="*" element={<Navigate to="/Home" />} />
       </Routes>
-    </Router>
+    </>
   );
 };
 

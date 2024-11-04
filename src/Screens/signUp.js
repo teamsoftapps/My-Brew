@@ -15,15 +15,24 @@ import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import GoogleIcon from "@mui/icons-material/Google";
 import { useNavigate } from "react-router-dom";
-const SignUp = () => {
+const SignUp = ({ onSignIn }) => {
   const [showPassword, setShowPassword] = React.useState(false);
   const [rememberMe, setRememberMe] = useState(false);
+
   const navigation = useNavigate();
+
   const handleTogglePasswordVisibility = () => {
     setShowPassword((prev) => !prev);
   };
+
   const handleRememberMeChange = (event) => {
     setRememberMe(event.target.checked);
+  };
+
+  const handleSignUp = (e) => {
+    e.preventDefault();
+    onSignIn();
+    navigation("/SignIn");
   };
 
   return (
@@ -350,9 +359,7 @@ const SignUp = () => {
           </Box>
           <Box>
             <Button
-              onClick={() => {
-                navigation("/Home");
-              }}
+              onClick={handleSignUp}
               variant="contained"
               sx={{
                 width: { xs: "100%", md: "50%" },
