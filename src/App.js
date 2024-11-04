@@ -1,26 +1,47 @@
-import logo from "./logo.svg";
-import "./App.css";
+import React, { useState } from "react";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
+import AuthStack from "./navigation/AuthStack"; // Adjust the import path as needed
+import MainStack from "./navigation/mainStack"; // Adjust the import path as needed
 
-function App() {
-  //WHat ISt
+const App = () => {
+  const [isAuthenticated, setIsAuthenticated] = useState(false); // Boolean state for authentication
+
+  const handleSignIn = () => {
+    setIsAuthenticated(true); // Set to true on sign-in
+  };
+
+  const handleLogout = () => {
+    setIsAuthenticated(false); // Set to false on logout
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <Routes>
+        {isAuthenticated ? (
+          <Route
+            path="/*"
+            element={
+              <MainStack
+                isAuthenticated={isAuthenticated}
+                onLogout={handleLogout}
+              />
+            }
+          />
+        ) : (
+          <Route path="/*" element={<AuthStack onSignIn={handleSignIn} />} />
+        )}
+        <Route
+          path="*"
+          element={<Navigate to={isAuthenticated ? "/Home" : "/"} />}
+        />
+      </Routes>
+    </Router>
   );
-}
+};
 
 export default App;

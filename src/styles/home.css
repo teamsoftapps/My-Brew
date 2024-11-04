@@ -1,0 +1,76 @@
+.responsive-image {
+  position: absolute;
+  height: auto; /* Maintain aspect ratio */
+}
+
+@media (max-width: 576px) {
+  /* Extra Small Devices (phones) */
+  .img-1 {
+    width: 30vw;
+    left: 12vw;
+    top: 0;
+  }
+  .img-2 {
+    width: 25vw;
+    left: 0;
+    bottom: 7rem;
+  }
+  .img-3 {
+    width: 20vw;
+    right: 0;
+    top: 3rem;
+  }
+  .img-4 {
+    width: 20vw;
+    right: 10vw;
+    bottom: 3rem;
+  }
+}
+
+@media (min-width: 577px) and (max-width: 768px) {
+  /* Small Devices (tablets) */
+  .img-1 {
+    width: 25vw;
+    left: 12vw;
+    top: 0;
+  }
+  .img-2 {
+    width: 20vw;
+    left: 0;
+    bottom: 7rem;
+  }
+  .img-3 {
+    width: 15vw;
+    right: 0;
+    top: 3rem;
+  }
+  .img-4 {
+    width: 15vw;
+    right: 10vw;
+    bottom: 3rem;
+  }
+}
+
+@media (min-width: 769px) {
+  /* Medium Devices and up */
+  .img-1 {
+    width: 20vw;
+    left: 12vw;
+    top: 0;
+  }
+  .img-2 {
+    width: 15vw;
+    left: 0;
+    bottom: 7rem;
+  }
+  .img-3 {
+    width: 10vw;
+    right: 0;
+    top: 3rem;
+  }
+  .img-4 {
+    width: 10vw;
+    right: 10vw;
+    bottom: 3rem;
+  }
+}
