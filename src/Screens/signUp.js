@@ -31,6 +31,7 @@ const SignUp = () => {
       container
       sx={{
         height: "100vh",
+        overflow: { xs: "auto", sm: "auto", md: "hidden" },
       }}
     >
       <Grid
@@ -82,15 +83,15 @@ const SignUp = () => {
             top: 0,
           }}
         >
-          <Typography variant="body2">New User? </Typography>
+          <Typography variant="body2">Already a member? </Typography>
           <Typography
             onClick={() => {
-              navigation("/SignUp");
+              navigation("/SignIn");
             }}
             variant="body2"
             sx={{ color: "#6149CD", fontWeight: "600", ml: 1 }}
           >
-            Create an account
+            Sign In
           </Typography>
         </Grid>
         <Grid
@@ -135,7 +136,7 @@ const SignUp = () => {
               startIcon={<GoogleIcon />}
             >
               <Typography sx={{ display: { xs: "none", sm: "block" } }}>
-                Sign In with Google
+                Sign Up with Google
               </Typography>
             </Button>
 
@@ -374,15 +375,15 @@ const SignUp = () => {
               width: "100%",
             }}
           >
-            <Typography variant="body2">New User? </Typography>
+            <Typography variant="body2">Already a member? </Typography>
             <Typography
               onClick={() => {
-                navigation("/SignUp");
+                navigation("/SignIn");
               }}
               variant="body2"
               sx={{ color: "#6149CD", fontWeight: "600", ml: 1 }}
             >
-              Create an account
+              Sign In
             </Typography>
           </Grid>
         </Grid>

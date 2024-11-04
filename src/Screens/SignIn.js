@@ -87,7 +87,7 @@ const SignUp = () => {
           <Typography variant="body2">New User? </Typography>
           <Typography
             onClick={() => {
-              navigation("/SignUp");
+              navigation("/");
             }}
             variant="body2"
             sx={{ color: "#6149CD", fontWeight: "600", ml: 1 }}
@@ -291,7 +291,7 @@ const SignUp = () => {
               }}
               variant="contained"
               sx={{
-                width: { xs: "100%" },
+                width: { xs: "100%", md: "50%" },
                 backgroundColor: "#FF6F61",
                 px: 8,
                 py: 1.5,
@@ -314,7 +314,7 @@ const SignUp = () => {
             <Typography variant="body2">New User? </Typography>
             <Typography
               onClick={() => {
-                navigation("/SignUp");
+                navigation("/");
               }}
               variant="body2"
               sx={{ color: "#6149CD", fontWeight: "600", ml: 1 }}

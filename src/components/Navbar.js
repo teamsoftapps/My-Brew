@@ -30,7 +30,7 @@ const Nav = () => {
 
   const handleNavigate = (path) => {
     navigation(path);
-    setDrawerOpen(false); // Close the drawer after navigation
+    setDrawerOpen(false);
   };
 
   return (
@@ -48,7 +48,7 @@ const Nav = () => {
           spacing={2}
           justifyContent="space-between"
           alignItems="center"
-          px={{ xs: 2, sm: 2, md: 4 }}
+          px={{ xs: 2, sm: 2, md: 12 }}
         >
           {/* Logo */}
           <Grid item xs={4} sm={2} md={2}>
@@ -77,19 +77,17 @@ const Nav = () => {
           {/* Tabs for larger screens */}
           <Grid
             item
-            sm={8} // Show on small screens and up
+            sm={8}
             md={8}
             sx={{
               display: { xs: "none", sm: "flex" },
               justifyContent: "flex-end",
               alignItems: "center",
-            }} // Use flex to align items
+            }}
           >
             <Box sx={{ display: "flex", alignItems: "center" }}>
-              {" "}
-              {/* Flexbox for horizontal alignment */}
               <Button
-                onClick={() => handleNavigate("/about")}
+                onClick={() => handleNavigate("/MyNotes")}
                 sx={{ color: "#000000", fontFamily: "Poppins" }}
               >
                 About
@@ -148,7 +146,7 @@ const Nav = () => {
       {/* Drawer for mobile */}
       <Drawer anchor="right" open={drawerOpen} onClose={handleDrawerToggle}>
         <List sx={{ width: 250 }}>
-          <ListItem button onClick={() => handleNavigate("/about")}>
+          <ListItem button onClick={() => handleNavigate("/MyNotes")}>
             <ListItemText primary="About" sx={{ fontFamily: "Poppins" }} />
           </ListItem>
           <ListItem button onClick={() => handleNavigate("/blog")}>

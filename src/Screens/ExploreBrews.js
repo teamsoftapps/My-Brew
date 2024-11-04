@@ -59,6 +59,7 @@ const cards = [
 const ExploreBrews = () => {
   const [selectedCat, setSelectedCat] = useState(0);
   const [hoveredIndex, setHoveredIndex] = useState(null);
+  const [isLiked, setIsLiked] = useState(false);
   return (
     <Box>
       <Nav />
@@ -188,6 +189,7 @@ const ExploreBrews = () => {
                     animation: "rotate 0.5s ease-in-out",
                   },
                 },
+                display: "none",
                 padding: { xs: "0.5rem 1rem", sm: "0.6rem 2rem" },
                 position: { xs: "fixed", sm: "fixed", md: "static" },
                 right: { xs: "1rem", sm: "2rem" },
@@ -283,7 +285,7 @@ const ExploreBrews = () => {
                   >
                     <IconButton
                       sx={{
-                        display: "none",
+                        display: "flex",
                         backgroundColor: "#EBEDEF",
                       }}
                       aria-label="Heart"
@@ -292,7 +294,7 @@ const ExploreBrews = () => {
                     </IconButton>
                     <IconButton
                       sx={{
-                        display: "none",
+                        display: { xs: "none", md: "none" },
                         backgroundColor: "#F6D9D6",
                         "&:hover": {
                           backgroundColor: "#FFE2DF",
@@ -304,7 +306,7 @@ const ExploreBrews = () => {
                     </IconButton>
                     <IconButton
                       sx={{
-                        display: { xs: "none", md: "flex" },
+                        display: { xs: "none", md: "none" },
                         backgroundColor: "#E1E3E5",
                         "&:hover": {
                           backgroundColor: "#CDD2D5",

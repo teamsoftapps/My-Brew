@@ -20,12 +20,17 @@ const Home = () => {
         container
         spacing={2}
         sx={{
-          px: { xs: 3, sm: 3, md: 8 },
+          px: { xs: 3, sm: 3, md: 15 },
           py: 5,
         }}
       >
         <Grid item xs={12} md={6}>
-          <Box sx={{ display: "flex", flexDirection: "column" }}>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+            }}
+          >
             <Typography
               variant="h2"
               sx={{
