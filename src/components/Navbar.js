@@ -100,7 +100,7 @@ const Nav = ({ isAuthenticated, onLogout }) => {
           >
             <Box sx={{ display: "flex", alignItems: "center" }}>
               <Button
-                onClick={() => handleNavigate("/about")}
+                onClick={() => handleNavigate("/")}
                 sx={{ color: "#000000", fontFamily: "Poppins" }}
               >
                 About
@@ -178,6 +178,7 @@ const Nav = ({ isAuthenticated, onLogout }) => {
                       <Box
                         onClick={() => {
                           navigation("/BrewCollection");
+                          setTooltipVisible(!tooltipVisible);
                         }}
                         sx={{
                           width: "100%",
@@ -207,6 +208,7 @@ const Nav = ({ isAuthenticated, onLogout }) => {
                       <Box
                         onClick={() => {
                           navigation("/ExploreBrews");
+                          setTooltipVisible(!tooltipVisible);
                         }}
                         sx={{
                           display: "flex",
@@ -235,6 +237,7 @@ const Nav = ({ isAuthenticated, onLogout }) => {
                       <Box
                         onClick={() => {
                           navigation("/MyNotes");
+                          setTooltipVisible(!tooltipVisible);
                         }}
                         sx={{
                           display: "flex",
@@ -260,6 +263,9 @@ const Nav = ({ isAuthenticated, onLogout }) => {
                         </Typography>
                       </Box>
                       <Box
+                        onClick={() => {
+                          setTooltipVisible(!tooltipVisible);
+                        }}
                         sx={{
                           display: "flex",
                           flexDirection: "row",
@@ -362,14 +368,20 @@ const Nav = ({ isAuthenticated, onLogout }) => {
       {/* Drawer for mobile */}
       <Drawer anchor="right" open={drawerOpen} onClose={handleDrawerToggle}>
         <List sx={{ width: 250 }}>
+          <ListItem button onClick={() => handleNavigate("/BrewCollection")}>
+            <ListItemText
+              primary="BrewCollection"
+              sx={{ fontFamily: "Poppins" }}
+            />
+          </ListItem>
+          <ListItem button onClick={() => handleNavigate("/ExploreBrews")}>
+            <ListItemText
+              primary="ExploreBrews"
+              sx={{ fontFamily: "Poppins" }}
+            />
+          </ListItem>
           <ListItem button onClick={() => handleNavigate("/MyNotes")}>
-            <ListItemText primary="About" sx={{ fontFamily: "Poppins" }} />
-          </ListItem>
-          <ListItem button onClick={() => handleNavigate("/blog")}>
-            <ListItemText primary="Blog" sx={{ fontFamily: "Poppins" }} />
-          </ListItem>
-          <ListItem button onClick={() => handleNavigate("/contact")}>
-            <ListItemText primary="Contact" sx={{ fontFamily: "Poppins" }} />
+            <ListItemText primary="MyNotes" sx={{ fontFamily: "Poppins" }} />
           </ListItem>
           <ListItem button>
             <Button

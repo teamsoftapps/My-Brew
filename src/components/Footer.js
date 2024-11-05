@@ -9,7 +9,7 @@ const Footer = () => {
       sx={{
         // backgroundColor: "#ffffff",
         padding: "2rem 0",
-        width: "100%",
+        // width: "100%",
         display: "flex",
         flexDirection: { xs: "column", sm: "column", md: "row" },
         alignItems: "baseline",

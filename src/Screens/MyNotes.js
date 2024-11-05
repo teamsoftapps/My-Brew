@@ -26,6 +26,8 @@ import EditIcon from "@mui/icons-material/Edit";
 import CloseIcon from "@mui/icons-material/Close";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { styled } from "@mui/material/styles";
+import { setCategoryColor } from "../redux/slices/notesSlices/tastingSlice";
+import { useDispatch, useSelector } from "react-redux";
 const Tasting_Notes = [
   {
     cat: "Tasting Note",
@@ -189,6 +191,9 @@ const MyNotes = () => {
   const [fermentationSelectedColour, setFermentationSelectedColour] =
     useState("");
 
+  const dispatch = useDispatch();
+  const tastingColor = useSelector((state) => state.notes.tastingColor);
+  console.log("tasting color:", tastingColor);
   //Modal functions
   const handleDateChange = (date) => {
     setSelectedDate(date);
@@ -237,7 +242,13 @@ const MyNotes = () => {
           <Grid item md={6}>
             <Typography variant="h2">My Notes</Typography>
           </Grid>
-          <Grid item md={6} display="flex" justifyContent="flex-end">
+          <Grid
+            item
+            md={6}
+            display="flex"
+            justifyContent="flex-end"
+            sx={{ zIndex: { xs: 10000, sm: 10000, md: 0, lg: 0 } }}
+          >
             <Button
               onClick={() => {
                 setIsModal(true);
@@ -323,7 +334,7 @@ const MyNotes = () => {
                     sx={{
                       width: { xs: "95%", sm: "90%", md: "90%" },
                       backgroundColor: backColorTasting
-                        ? `rgba(${backColorTasting},.2)`
+                        ? `rgba(${tastingColor.color},.2)`
                         : backColorTasting === null
                         ? "#fff"
                         : null,
@@ -339,7 +350,7 @@ const MyNotes = () => {
                       variant="h5"
                       color={
                         backColorTasting
-                          ? `rgba(${backColorTasting})`
+                          ? `rgba(${tastingColor.color})`
                           : backColorTasting === null
                           ? "#000"
                           : null
@@ -391,10 +402,16 @@ const MyNotes = () => {
                           key={index}
                           onClick={() => {
                             const rgbaColor = `rgba(${colorObj.col}, 0.2)`;
+                            dispatch(
+                              setCategoryColor({
+                                category: "tasting",
+                                color: colorObj.col,
+                              })
+                            );
                             setbackColorTasting(colorObj.col);
                             setTastingColourPallete(!tastingColourPallete);
                             setTastingSelectedColour(index);
-                            console.log(rgbaColor);
+                            console.log("12345681234568", colorObj.col);
                           }}
                           style={{
                             width: "18%",
@@ -453,7 +470,7 @@ const MyNotes = () => {
                     transition: "border-color 0.3s ease",
                     "&:hover": {
                       border: backColorTasting
-                        ? `2px solid rgb(${backColorTasting})`
+                        ? `2px solid rgb(${tastingColor.color})`
                         : null,
                     },
                   }}

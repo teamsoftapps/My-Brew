@@ -11,8 +11,6 @@ import Footer from "../components/Footer";
 import { useNavigate } from "react-router-dom";
 import "../styles/home.css";
 const Home = () => {
-  const navigation = useNavigate();
-
   return (
     <Box sx={{ backgroundColor: "#F8F9FA" }}>
       <Grid
@@ -73,10 +71,26 @@ const Home = () => {
                 mt: 4,
                 borderColor: "#000000",
                 color: "#000",
-                borderRadius: "20px",
-                width: "150px",
-                height: "40px",
-                fontFamily: "Poppins",
+                borderRadius: "25px",
+                width: {
+                  xs: "150px", // for extra small screens
+                  sm: "160px", // for small screens
+                  md: "200px", // for medium screens
+                  lg: "200px", // for large screens
+                },
+                height: {
+                  xs: "40px", // for extra small screens
+                  sm: "40px", // for small screens
+                  md: "40px", // for medium screens
+                  lg: "45px", // for large screens
+                },
+                // fontFamily: "Poppins",
+                fontSize: {
+                  xs: "0.8rem", // smaller text on extra small screens
+                  sm: "0.9rem", // slightly larger on small screens
+                  md: "1rem", // standard size for medium screens
+                  lg: "1.1rem", // larger text for large screens
+                },
               }}
               endIcon={<ArrowOutwardIcon />}
             >
@@ -272,6 +286,7 @@ const Home = () => {
           className="responsive-image img-4"
         />
       </Box>
+      {/* Footer */}
       <Box sx={{ px: { xs: 3 } }}>
         <Footer />
       </Box>
