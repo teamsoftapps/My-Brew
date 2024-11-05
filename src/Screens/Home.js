@@ -68,9 +68,6 @@ const Home = () => {
               with the world.
             </Typography>
             <Button
-              onClick={() => {
-                navigation("/BrewCollection");
-              }}
               variant="outlined"
               sx={{
                 mt: 4,
