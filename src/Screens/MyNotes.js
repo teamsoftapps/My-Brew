@@ -26,7 +26,10 @@ import EditIcon from "@mui/icons-material/Edit";
 import CloseIcon from "@mui/icons-material/Close";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { styled } from "@mui/material/styles";
-import { setCategoryColor } from "../redux/slices/notesSlices/tastingSlice";
+import {
+  resetCategoryColor,
+  setCategoryColor,
+} from "../redux/slices/notesSlices/tastingSlice";
 import { useDispatch, useSelector } from "react-redux";
 const Tasting_Notes = [
   {
@@ -192,8 +195,8 @@ const MyNotes = () => {
     useState("");
 
   const dispatch = useDispatch();
-  const tastingColor = useSelector((state) => state.notes.tastingColor);
-  console.log("tasting color:", tastingColor);
+  const backColor = useSelector((state) => state.notes);
+  console.log("tasting color:", backColor);
   //Modal functions
   const handleDateChange = (date) => {
     setSelectedDate(date);
@@ -333,8 +336,8 @@ const MyNotes = () => {
                   <Box
                     sx={{
                       width: { xs: "95%", sm: "90%", md: "90%" },
-                      backgroundColor: backColorTasting
-                        ? `rgba(${tastingColor.color},.2)`
+                      backgroundColor: backColor?.tastingColor
+                        ? `rgba(${backColor?.tastingColor},.2)`
                         : backColorTasting === null
                         ? "#fff"
                         : null,
@@ -349,8 +352,8 @@ const MyNotes = () => {
                     <Typography
                       variant="h5"
                       color={
-                        backColorTasting
-                          ? `rgba(${tastingColor.color})`
+                        backColor?.tastingColor
+                          ? `rgba(${backColor?.tastingColor})`
                           : backColorTasting === null
                           ? "#000"
                           : null
@@ -435,8 +438,10 @@ const MyNotes = () => {
                     >
                       <Button
                         onClick={() => {
+                          dispatch(resetCategoryColor({ category: "tasting" }));
                           setTastingSelectedColour(null);
                           setbackColorTasting(null);
+                          setTastingColourPallete(false);
                         }}
                         variant="contained"
                         startIcon={<CloseIcon sx={{ color: "#000" }} />}
@@ -469,8 +474,8 @@ const MyNotes = () => {
                     position: "relative",
                     transition: "border-color 0.3s ease",
                     "&:hover": {
-                      border: backColorTasting
-                        ? `2px solid rgb(${tastingColor.color})`
+                      border: backColor?.tastingColor
+                        ? `2px solid rgb(${backColor?.tastingColor})`
                         : null,
                     },
                   }}
@@ -565,14 +570,16 @@ const MyNotes = () => {
                     >
                       <LocalOfferOutlinedIcon
                         sx={{
-                          color: backColorTasting
-                            ? `rgb(${backColorTasting})`
+                          color: backColor?.tastingColor
+                            ? `rgb(${backColor?.tastingColor})`
                             : null,
                         }}
                       />
                       <Typography
                         color={
-                          backColorTasting ? `rgb(${backColorTasting})` : null
+                          backColor?.tastingColor
+                            ? `rgb(${backColor?.tastingColor})`
+                            : null
                         }
                         sx={{
                           fontSize: {
@@ -645,9 +652,9 @@ const MyNotes = () => {
                   <Box
                     sx={{
                       width: { xs: "95%", sm: "90%", md: "90%" },
-                      backgroundColor: backColorBrewing
-                        ? `rgba(${backColorBrewing},.2)`
-                        : backColorBrewing === null
+                      backgroundColor: backColor?.brewingColor
+                        ? `rgba(${backColor?.brewingColor},.2)`
+                        : backColor?.brewingColor === null
                         ? "#fff"
                         : null,
                       display: "flex",
@@ -661,9 +668,9 @@ const MyNotes = () => {
                     <Typography
                       variant="h5"
                       color={
-                        backColorBrewing
-                          ? `rgba(${backColorBrewing})`
-                          : backColorBrewing === null
+                        backColor?.brewingColor
+                          ? `rgba(${backColor?.brewingColor})`
+                          : backColor?.brewingColor === null
                           ? "#000"
                           : null
                       }
@@ -714,6 +721,12 @@ const MyNotes = () => {
                           key={index}
                           onClick={() => {
                             const rgbaColor = `rgba(${colorObj.col}, 0.2)`; // set the desired opacity
+                            dispatch(
+                              setCategoryColor({
+                                category: "brewing",
+                                color: colorObj.col,
+                              })
+                            );
                             setbackColorBrewing(colorObj.col); //set background colour
                             setBrewingColourPallete(!brewingColourPallete); // This open the color pallete
                             setBrewingSelectedColour(index); //set the index for highlighting the selected colour
@@ -744,6 +757,8 @@ const MyNotes = () => {
                         onClick={() => {
                           setBrewingSelectedColour(null);
                           setbackColorBrewing(null);
+                          dispatch(resetCategoryColor({ category: "brewing" }));
+                          setBrewingColourPallete(false);
                         }}
                         variant="contained"
                         startIcon={<CloseIcon sx={{ color: "#000" }} />}
@@ -775,8 +790,8 @@ const MyNotes = () => {
                     overflow: "hidden",
                     transition: "border-color 0.3s ease",
                     "&:hover": {
-                      border: backColorBrewing
-                        ? `2px solid rgb(${backColorBrewing})`
+                      border: backColor?.brewingColor
+                        ? `2px solid rgb(${backColor?.brewingColor})`
                         : null,
                     },
                   }}
@@ -871,14 +886,16 @@ const MyNotes = () => {
                     >
                       <LocalOfferOutlinedIcon
                         sx={{
-                          color: backColorBrewing
-                            ? `rgb(${backColorBrewing})`
+                          color: backColor?.brewingColor
+                            ? `rgb(${backColor?.brewingColor})`
                             : "#000",
                         }}
                       />
                       <Typography
                         color={
-                          backColorBrewing ? `rgb(${backColorBrewing})` : "#000"
+                          backColor?.brewingColor
+                            ? `rgb(${backColor?.brewingColor})`
+                            : "#000"
                         }
                         sx={{
                           fontSize: {
@@ -951,9 +968,9 @@ const MyNotes = () => {
                   <Box
                     sx={{
                       width: { xs: "95%", sm: "90%", md: "90%" },
-                      backgroundColor: backColorFermentation
-                        ? `rgba(${backColorFermentation},.2)`
-                        : backColorFermentation === null
+                      backgroundColor: backColor?.fermentationColor
+                        ? `rgba(${backColor?.fermentationColor},.2)`
+                        : backColor?.fermentationColor === null
                         ? "#fff"
                         : null,
                       display: "flex",
@@ -967,9 +984,9 @@ const MyNotes = () => {
                     <Typography
                       variant="h5"
                       color={
-                        backColorFermentation
-                          ? `rgba(${backColorFermentation})`
-                          : backColorFermentation === null
+                        backColor?.fermentationColor
+                          ? `rgba(${backColor?.fermentationColor})`
+                          : backColor?.fermentationColor === null
                           ? "#000"
                           : null
                       }
@@ -1022,6 +1039,12 @@ const MyNotes = () => {
                           key={index}
                           onClick={() => {
                             const rgbaColor = `rgba(${colorObj.col}, 0.2)`;
+                            dispatch(
+                              setCategoryColor({
+                                category: "fermentation",
+                                color: colorObj.col,
+                              })
+                            );
                             setbackColorFermentation(colorObj.col);
                             setFermentationSelectedColour(index);
                             setFermentationColourPallete(
@@ -1053,6 +1076,10 @@ const MyNotes = () => {
                         onClick={() => {
                           setFermentationSelectedColour(null);
                           setbackColorFermentation(null);
+                          dispatch(
+                            resetCategoryColor({ category: "fermentation" }),
+                            setFermentationColourPallete(false)
+                          );
                         }}
                         variant="contained"
                         startIcon={<CloseIcon sx={{ color: "#000" }} />}
@@ -1084,8 +1111,8 @@ const MyNotes = () => {
                     overflow: "hidden",
                     transition: "border-color 0.3s ease",
                     "&:hover": {
-                      border: backColorFermentation
-                        ? `2px solid rgb(${backColorFermentation})`
+                      border: backColor?.fermentationColor
+                        ? `2px solid rgb(${backColor?.fermentationColor})`
                         : null,
                     },
                   }}
@@ -1184,15 +1211,15 @@ const MyNotes = () => {
                     >
                       <LocalOfferOutlinedIcon
                         sx={{
-                          color: backColorFermentation
-                            ? `rgb(${backColorFermentation})`
+                          color: backColor?.fermentationColor
+                            ? `rgb(${backColor?.fermentationColor})`
                             : "#000",
                         }}
                       />
                       <Typography
                         color={
-                          backColorFermentation
-                            ? `rgb(${backColorFermentation})`
+                          backColor?.fermentationColor
+                            ? `rgb(${backColor?.fermentationColor})`
                             : "#000"
                         }
                         sx={{
@@ -1271,9 +1298,9 @@ const MyNotes = () => {
                   <Box
                     sx={{
                       width: { xs: "95%", sm: "90%", md: "90%" },
-                      backgroundColor: backColorBottling
-                        ? `rgba(${backColorBottling},.2)`
-                        : backColorBottling === null
+                      backgroundColor: backColor?.bottlingColor
+                        ? `rgba(${backColor?.bottlingColor},.2)`
+                        : backColor?.bottlingColor === null
                         ? "#fff"
                         : null,
                       display: "flex",
@@ -1287,9 +1314,9 @@ const MyNotes = () => {
                     <Typography
                       variant="h5"
                       color={
-                        backColorBottling
-                          ? `rgba(${backColorBottling})`
-                          : backColorBottling === null
+                        backColor?.bottlingColor
+                          ? `rgba(${backColor?.bottlingColor})`
+                          : backColor?.bottlingColor === null
                           ? "#000"
                           : null
                       }
@@ -1341,6 +1368,12 @@ const MyNotes = () => {
                           key={index}
                           onClick={() => {
                             const rgbaColor = `rgba(${colorObj.col}, 0.2)`; // Set the desired opacity
+                            dispatch(
+                              setCategoryColor({
+                                category: "bottling",
+                                color: colorObj.col,
+                              })
+                            );
                             setbackColorBottling(colorObj.col); //set background colour
                             setBottlingColourPallete(!bottlingColourPallete); // This open the color pallete
                             setBottlingSelectedColour(index); //set the index for highlighting the selected colour
@@ -1370,6 +1403,10 @@ const MyNotes = () => {
                         onClick={() => {
                           setBottlingSelectedColour(null);
                           setbackColorBottling(null);
+                          dispatch(
+                            resetCategoryColor({ category: "bottling" })
+                          );
+                          setBottlingColourPallete(false);
                         }}
                         variant="contained"
                         startIcon={<CloseIcon sx={{ color: "#000" }} />}
@@ -1401,8 +1438,8 @@ const MyNotes = () => {
                     overflow: "hidden",
                     transition: "border-color 0.3s ease",
                     "&:hover": {
-                      border: backColorBottling
-                        ? `2px solid rgb(${backColorBottling})`
+                      border: backColor?.bottlingColor
+                        ? `2px solid rgb(${backColor?.bottlingColor})`
                         : null,
                     },
                   }}
@@ -1497,14 +1534,16 @@ const MyNotes = () => {
                     >
                       <LocalOfferOutlinedIcon
                         sx={{
-                          color: backColorBottling
-                            ? `rgb(${backColorBottling})`
+                          color: backColor?.bottlingColor
+                            ? `rgb(${backColor?.bottlingColor})`
                             : null,
                         }}
                       />
                       <Typography
                         color={
-                          backColorBottling ? `rgb(${backColorBottling})` : null
+                          backColor?.bottlingColor
+                            ? `rgb(${backColor?.bottlingColor})`
+                            : null
                         }
                         sx={{
                           fontSize: {
