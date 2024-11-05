@@ -15,7 +15,7 @@ import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import GoogleIcon from "@mui/icons-material/Google";
 import { useNavigate } from "react-router-dom";
-const SignUp = ({ onSignIn }) => {
+const SignUp = () => {
   const [showPassword, setShowPassword] = React.useState(false);
   const [rememberMe, setRememberMe] = useState(false);
 
@@ -30,8 +30,6 @@ const SignUp = ({ onSignIn }) => {
   };
 
   const handleSignUp = (e) => {
-    e.preventDefault();
-    onSignIn();
     navigation("/SignIn");
   };
 
