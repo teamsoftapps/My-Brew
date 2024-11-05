@@ -5,18 +5,18 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
-import AuthStack from "./navigation/AuthStack"; // Adjust the import path as needed
-import MainStack from "./navigation/mainStack"; // Adjust the import path as needed
+import AuthStack from "./navigation/AuthStack";
+import MainStack from "./navigation/mainStack";
 
 const App = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false); // Boolean state for authentication
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   const handleSignIn = () => {
-    setIsAuthenticated(true); // Set to true on sign-in
+    setIsAuthenticated(true);
   };
 
   const handleLogout = () => {
-    setIsAuthenticated(false); // Set to false on logout
+    setIsAuthenticated(false);
   };
 
   return (
@@ -33,11 +33,19 @@ const App = () => {
             }
           />
         ) : (
-          <Route path="/*" element={<AuthStack onSignIn={handleSignIn} />} />
+          <Route
+            path="/*"
+            element={
+              <AuthStack
+                onSignIn={handleSignIn}
+                isAuthenticated={isAuthenticated}
+              />
+            }
+          />
         )}
         <Route
           path="*"
-          element={<Navigate to={isAuthenticated ? "/Home" : "/"} />}
+          element={<Navigate to={isAuthenticated ? "/Home" : "/SignIn"} />}
         />
       </Routes>
     </Router>
