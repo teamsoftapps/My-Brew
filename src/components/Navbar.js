@@ -41,6 +41,11 @@ const Nav = ({ isAuthenticated, onLogout }) => {
     setDrawerOpen(false);
   };
 
+  const handleLogout = () => {
+    onLogout();
+    navigation("/SignIn");
+  };
+
   return (
     <AppBar
       position="static"
@@ -286,7 +291,7 @@ const Nav = ({ isAuthenticated, onLogout }) => {
                         }}
                       />
                       <Box
-                        onClick={onLogout}
+                        onClick={handleLogout}
                         sx={{
                           display: "flex",
                           flexDirection: "row",
