@@ -66,6 +66,9 @@ const Nav = ({ isAuthenticated, onLogout }) => {
           {/* Logo */}
           <Grid item xs={4} sm={2} md={2}>
             <Box
+              onClick={() => {
+                navigation("/Home");
+              }}
               sx={{
                 maxWidth: { xs: "110px", sm: "140px", md: "220px" },
                 width: "100%",
@@ -73,6 +76,7 @@ const Nav = ({ isAuthenticated, onLogout }) => {
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
+                cursor: "pointer",
               }}
             >
               <img
