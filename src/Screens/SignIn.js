@@ -17,10 +17,14 @@ import faceBookIcon from "../assets/Images/facebook.png";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { useNavigate } from "react-router-dom";
-
+import ToastNotification, {
+  showToastMessage,
+} from "../components/ToastMessage";
 const SignIn = ({ onSignIn }) => {
   const [showPassword, setShowPassword] = React.useState(false);
   const [rememberMe, setRememberMe] = useState(false);
+  const [isEmail, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const navigation = useNavigate();
   const handleTogglePasswordVisibility = () => {
     setShowPassword((prev) => !prev);
@@ -28,7 +32,26 @@ const SignIn = ({ onSignIn }) => {
   const handleRememberMeChange = (event) => {
     setRememberMe(event.target.checked);
   };
+  const validateEmail = (email) => {
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    return emailRegex.test(email);
+  };
+
+  const validatePassword = (password) => {
+    const passwordRegex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d@$!%*?&]{8,}$/;
+    return passwordRegex.test(password);
+  };
+
   const handleSignIn = (e) => {
+    let payload = {
+      email: isEmail,
+      pass: password,
+    };
+    try {
+      if (!validateEmail.test) {
+      }
+    } catch (error) {}
     e.preventDefault();
     onSignIn();
     navigation("/Home");
@@ -206,6 +229,10 @@ const SignIn = ({ onSignIn }) => {
                   Your email
                 </Typography>
                 <InputBase
+                  onChange={(text) => {
+                    setEmail(text);
+                  }}
+                  value={isEmail}
                   placeholder="Tonynguyen@example.com"
                   sx={{
                     width: "100%",
@@ -233,6 +260,10 @@ const SignIn = ({ onSignIn }) => {
                   Your Password
                 </Typography>
                 <InputBase
+                  onChange={(text) => {
+                    setPassword(text);
+                  }}
+                  value={password}
                   type={showPassword ? "text" : "password"}
                   placeholder="********"
                   sx={{
