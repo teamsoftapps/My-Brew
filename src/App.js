@@ -1,52 +1,21 @@
-import React, { useState } from "react";
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  Navigate,
-} from "react-router-dom";
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import AuthStack from "./navigation/AuthStack";
 import MainStack from "./navigation/mainStack";
+import { useSelector } from "react-redux";
 
 const App = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-
-  const handleSignIn = () => {
-    setIsAuthenticated(true);
-  };
-
-  const handleLogout = () => {
-    setIsAuthenticated(false);
-  };
+  const token = useSelector((state) => state?.Auth?.data?.isToken);
+  console.log("Token we get:", token);
 
   return (
     <Router>
       <Routes>
-        {isAuthenticated ? (
-          <Route
-            path="/*"
-            element={
-              <MainStack
-                isAuthenticated={isAuthenticated}
-                onLogout={handleLogout}
-              />
-            }
-          />
+        {token ? (
+          <Route path="/*" element={<MainStack />} />
         ) : (
-          <Route
-            path="/*"
-            element={
-              <AuthStack
-                onSignIn={handleSignIn}
-                isAuthenticated={isAuthenticated}
-              />
-            }
-          />
+          <Route path="/*" element={<AuthStack />} />
         )}
-        <Route
-          path="*"
-          element={<Navigate to={isAuthenticated ? "/Home" : "/SignIn"} />}
-        />
       </Routes>
     </Router>
   );

@@ -22,12 +22,15 @@ import noteBook from "../assets/Images/notebook.png";
 import overView from "../assets/Images/overview.png";
 import exit from "../assets/Images/exit.png";
 import setting from "../assets/Images/settings.png";
+import { useDispatch, useSelector } from "react-redux";
+import { SignOut } from "../redux/slices/notesSlices/AuthSlice";
 
-const Nav = ({ isAuthenticated, onLogout }) => {
+const Nav = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [tooltipVisible, setTooltipVisible] = useState(false);
+  const token = useSelector((state) => state?.Auth?.data?.isToken);
   const navigation = useNavigate();
-
+  const dispatch = useDispatch();
   const handleDrawerToggle = () => {
     setDrawerOpen(!drawerOpen);
   };
@@ -41,9 +44,9 @@ const Nav = ({ isAuthenticated, onLogout }) => {
     setDrawerOpen(false);
   };
 
-  const handleLogout = () => {
-    onLogout();
-    navigation("/SignIn");
+  const handleLogout = async () => {
+    await dispatch(SignOut());
+    navigation("/SignIn", { replace: true });
   };
 
   return (
@@ -121,7 +124,7 @@ const Nav = ({ isAuthenticated, onLogout }) => {
               >
                 Contact
               </Button>
-              {isAuthenticated ? (
+              {token ? (
                 <Box
                   sx={{
                     display: "flex",

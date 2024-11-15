@@ -7,25 +7,25 @@ import {
   FormControlLabel,
   Checkbox,
   Grid,
-  TextField,
 } from "@mui/material";
 import React, { useState } from "react";
 import coverImage from "../assets/Images/signIn.png";
 import GoogleIcon from "@mui/icons-material/Google";
-import googleIcon from "../assets/Images/google.png";
 import faceBookIcon from "../assets/Images/facebook.png";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { useNavigate } from "react-router-dom";
-import ToastNotification, {
-  showToastMessage,
-} from "../components/ToastMessage";
-const SignIn = ({ onSignIn }) => {
+import { useSignInUserMutation } from "../redux/apis/UserAuth";
+import { useDispatch } from "react-redux";
+import { IsLogin } from "../redux/slices/notesSlices/AuthSlice";
+const SignIn = () => {
   const [showPassword, setShowPassword] = React.useState(false);
   const [rememberMe, setRememberMe] = useState(false);
   const [isEmail, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigation = useNavigate();
+  const dispatch = useDispatch();
+  const [SignIUser] = useSignInUserMutation();
   const handleTogglePasswordVisibility = () => {
     setShowPassword((prev) => !prev);
   };
@@ -43,18 +43,17 @@ const SignIn = ({ onSignIn }) => {
     return passwordRegex.test(password);
   };
 
-  const handleSignIn = (e) => {
+  const handleSignIn = async (e) => {
     let payload = {
-      email: isEmail,
-      pass: password,
+      isEmail: isEmail,
+      isPassword: password,
     };
     try {
-      if (!validateEmail.test) {
-      }
+      const response = await SignIUser(payload);
+      dispatch(IsLogin(response.data.data));
+      console.log("responce in signIn", response.data);
     } catch (error) {}
     e.preventDefault();
-    onSignIn();
-    navigation("/Home");
   };
   return (
     <Grid
@@ -229,8 +228,8 @@ const SignIn = ({ onSignIn }) => {
                   Your email
                 </Typography>
                 <InputBase
-                  onChange={(text) => {
-                    setEmail(text);
+                  onChange={(e) => {
+                    setEmail(e.target.value);
                   }}
                   value={isEmail}
                   placeholder="Tonynguyen@example.com"
@@ -260,8 +259,8 @@ const SignIn = ({ onSignIn }) => {
                   Your Password
                 </Typography>
                 <InputBase
-                  onChange={(text) => {
-                    setPassword(text);
+                  onChange={(e) => {
+                    setPassword(e.target.value);
                   }}
                   value={password}
                   type={showPassword ? "text" : "password"}

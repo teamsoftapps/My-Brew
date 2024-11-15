@@ -6,11 +6,12 @@ import leave_01 from "../assets/Images/leave_01.png";
 import leave_02 from "../assets/Images/leave_02.png";
 import leave_03 from "../assets/Images/leave_03.png";
 import leave_04 from "../assets/Images/leave_04.png";
-import Nav from "../components/Navbar";
 import Footer from "../components/Footer";
-import { useNavigate } from "react-router-dom";
 import "../styles/home.css";
+import { useSelector } from "react-redux";
 const Home = () => {
+  const AuthData = useSelector((state) => state?.Auth?.data);
+  console.log("in home screen:", AuthData);
   return (
     <Box sx={{ backgroundColor: "#F8F9FA" }}>
       <Grid

@@ -7,7 +7,6 @@ import {
   FormControlLabel,
   Checkbox,
   Grid,
-  FormControl,
 } from "@mui/material";
 import React, { useState } from "react";
 import coverImage from "../assets/Images/signUp.png";
@@ -16,7 +15,6 @@ import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import GoogleIcon from "@mui/icons-material/Google";
 import { useNavigate } from "react-router-dom";
-import { Password } from "@mui/icons-material";
 import { useSignUpUserMutation } from "../redux/apis/UserAuth";
 const SignUp = () => {
   const [showPassword, setShowPassword] = React.useState(false);
@@ -39,18 +37,28 @@ const SignUp = () => {
     setRememberMe(event.target.checked);
   };
 
-  const handleSignUp = async () => {
-    let payload = {
-      name: isName,
-      userName: isUserName,
-      email: isEmail,
-      Password: isPassword,
+  const handleSignUp = async (e) => {
+    e.preventDefault();
+
+    if (!isName || !isUserName || !isEmail || !isPassword) {
+      console.error("All fields are required");
+      return;
+    }
+
+    const payload = {
+      isName: isName,
+      isUsername: isUserName,
+      isEmail: isEmail,
+      isPassword: isPassword,
     };
 
     try {
-      const responce = await SignUpUser(payload);
-    } catch (error) {}
-    // navigation("/SignIn");
+      const response = await SignUpUser(payload);
+      console.log("Sign-up successful:", response);
+      navigation("/SignIn");
+    } catch (err) {
+      console.error("Error during sign-up:", err.message || err);
+    }
   };
 
   return (
@@ -226,8 +234,8 @@ const SignUp = () => {
                   Name
                 </Typography>
                 <InputBase
-                  onChange={(text) => {
-                    setName(text);
+                  onChange={(e) => {
+                    setName(e.target.value);
                   }}
                   value={isName}
                   placeholder="Tonynguyen"
@@ -257,8 +265,8 @@ const SignUp = () => {
                   User Name
                 </Typography>
                 <InputBase
-                  onChange={(text) => {
-                    setUserName(text);
+                  onChange={(e) => {
+                    setUserName(e.target.value);
                   }}
                   value={isUserName}
                   placeholder="Tonynguyen"
@@ -299,8 +307,8 @@ const SignUp = () => {
                   Your email
                 </Typography>
                 <InputBase
-                  onChange={(text) => {
-                    setEmail(text);
+                  onChange={(e) => {
+                    setEmail(e.target.value);
                   }}
                   value={isEmail}
                   placeholder="Tonynguyen@example.com"
@@ -330,8 +338,8 @@ const SignUp = () => {
                   Your Password
                 </Typography>
                 <InputBase
-                  onChange={(text) => {
-                    setPassword(text);
+                  onChange={(e) => {
+                    setPassword(e.target.value);
                   }}
                   value={isPassword}
                   type={showPassword ? "text" : "password"}
