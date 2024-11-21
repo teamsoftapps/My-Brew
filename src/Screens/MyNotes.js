@@ -11,8 +11,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React, { useState } from "react";
-import Nav from "../components/Navbar";
+import React, { useCallback, useEffect, useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
 import Footer from "../components/Footer";
 import noteImage from "../assets/Images/noteImage.png";
@@ -31,6 +30,7 @@ import {
   setCategoryColor,
 } from "../redux/slices/notesSlices/tastingSlice";
 import { useDispatch, useSelector } from "react-redux";
+import { useAddNoteMutation, useGetNoteMutation } from "../redux/apis/UserAuth";
 const Tasting_Notes = [
   {
     cat: "Tasting Note",
@@ -169,10 +169,19 @@ const backColours = [
   },
 ];
 const MyNotes = () => {
+  // ----------------------------userAuth----------------------------
+  const AuthData = useSelector((state) => state?.Auth?.data);
+  console.log("userAuth in mynotes screen", AuthData);
+
+  // -----------------------------All Notes-----------------------------
+  const [allNotes, setAllNotes] = useState([]);
+  console.log("All notes", allNotes);
+
   //Modal states
   const [isModal, setIsModal] = useState(false);
   const [type, setType] = useState();
   const [selectedDate, setSelectedDate] = useState(null);
+  const [description, setDescription] = useState("");
 
   //Open pallete states
   const [tastingColourPallete, setTastingColourPallete] = useState(false);
@@ -181,34 +190,40 @@ const MyNotes = () => {
   const [fermentaionColourPallete, setFermentationColourPallete] =
     useState(false);
 
-  //BackColour states
+  // -----------------------------BackColour states-----------------------------
   const [backColorTasting, setbackColorTasting] = useState("");
   const [backColorBrewing, setbackColorBrewing] = useState("");
   const [backColorFermentation, setbackColorFermentation] = useState("");
   const [backColorBottling, setbackColorBottling] = useState("");
 
-  //Selected colour states
+  // -----------------------------Selected colour states-----------------------------
   const [bottlingSelectedColour, setBottlingSelectedColour] = useState("");
   const [tastingSelectedColour, setTastingSelectedColour] = useState("");
   const [brewingSelectedColour, setBrewingSelectedColour] = useState("");
   const [fermentationSelectedColour, setFermentationSelectedColour] =
     useState("");
 
+  // -----------------------------Redux states-----------------------------
   const dispatch = useDispatch();
   const backColor = useSelector((state) => state.notes);
-  console.log("tasting color:", backColor);
-  //Modal functions
-  const handleDateChange = (date) => {
-    setSelectedDate(date);
-  };
+  const [AddNote] = useAddNoteMutation();
+  const [GetNotes] = useGetNoteMutation();
+
+  // -----------------------------Modal functions-----------------------------
   const handleCloseModal = () => {
     setIsModal(false);
+  };
+  const handleDescriptionChange = (event) => {
+    setDescription(event.target.value);
+  };
+  const handleDateChange = (date) => {
+    setSelectedDate(date);
   };
   const handleTypeChange = (event) => {
     setType(event.target.value);
   };
 
-  //Open Pallete functions
+  // -----------------------------Open Pallete functions-----------------------------
   const openBottingColours = () => {
     setBottlingColourPallete(true);
   };
@@ -222,6 +237,33 @@ const MyNotes = () => {
     setFermentationColourPallete(true);
   };
 
+  //-------------------------------API's Functions-------------------------------
+  const handleNotes = async () => {
+    try {
+      let payload = {
+        description: description,
+        categorie: type,
+        date: selectedDate,
+        userId: AuthData._id,
+      };
+      const notesResponce = await AddNote(payload);
+      setAllNotes((prevNotes) => [...prevNotes, notesResponce]);
+      console.log("notesResponce:", notesResponce);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getNotes = async () => {
+    try {
+      const responce = await GetNotes;
+      setAllNotes(responce);
+      console.log("all notesssssssssss", responce);
+    } catch (error) {}
+  };
+  // useEffect(() => {
+  //   getNotes();
+  // }, []);
   return (
     <Grid container sx={{ backgroundColor: "#F8F9FA" }}>
       <Grid
@@ -1652,6 +1694,8 @@ const MyNotes = () => {
                 multiline
                 rows={5}
                 placeholder="Add New Brew Note"
+                onChange={handleDescriptionChange}
+                value={description}
               />
               <Box
                 sx={{
@@ -1764,6 +1808,7 @@ const MyNotes = () => {
                   Cancel
                 </Button>
                 <Button
+                  onClick={handleNotes}
                   variant="contained"
                   sx={{
                     backgroundColor: "#FF6F61",

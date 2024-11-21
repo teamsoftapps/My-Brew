@@ -175,9 +175,6 @@ const BrewCollection = () => {
               }}
             />
             <Button
-              onClick={() => {
-                navigation("/ExploreBrews");
-              }}
               variant="contained"
               sx={{
                 backgroundColor: "#031D2D",

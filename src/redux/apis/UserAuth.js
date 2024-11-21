@@ -23,7 +23,26 @@ export const UserAuth = createApi({
         body,
       }),
     }),
+    AddNote: builder.mutation({
+      query: (body) => ({
+        url: "/addNotes",
+        method: "POST",
+        body,
+      }),
+    }),
+    GetNote: builder.mutation({
+      query: (body) => ({
+        url: "/getNotes",
+        method: "GET",
+        body,
+      }),
+    }),
   }),
 });
 
-export const { useSignInUserMutation, useSignUpUserMutation } = UserAuth;
+export const {
+  useSignInUserMutation,
+  useSignUpUserMutation,
+  useAddNoteMutation,
+  useGetNoteMutation,
+} = UserAuth;
