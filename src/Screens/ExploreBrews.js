@@ -8,7 +8,6 @@ import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlin
 import filterPng from "../assets/Images/filter.png";
 import cardImg from "../assets/Images/cardImg.png";
 import Footer from "../components/Footer";
-import { useLocation } from "react-router-dom";
 const Cats = [
   { id: 1, value: "ALL" },
   { id: 2, value: "TASTING" },
