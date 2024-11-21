@@ -261,9 +261,9 @@ const MyNotes = () => {
       console.log("all notesssssssssss", responce);
     } catch (error) {}
   };
-  // useEffect(() => {
-  //   getNotes();
-  // }, []);
+  useEffect(() => {
+    getNotes();
+  }, []);
   return (
     <Grid container sx={{ backgroundColor: "#F8F9FA" }}>
       <Grid
