@@ -16,6 +16,7 @@ export const UserAuth = createApi({
         body,
       }),
     }),
+
     SignUpUser: builder.mutation({
       query: (body) => ({
         url: "/userSignup",
@@ -23,6 +24,7 @@ export const UserAuth = createApi({
         body,
       }),
     }),
+
     AddNote: builder.mutation({
       query: (body) => ({
         url: "/addNotes",
@@ -30,6 +32,22 @@ export const UserAuth = createApi({
         body,
       }),
     }),
+
+    DeleteNote: builder.mutation({
+      query: (id) => ({
+        url: `/deleteNotes/${id}`,
+        method: "DELETE",
+      }),
+    }),
+
+    updateNote: builder.mutation({
+      query: ({ id, updatedData }) => ({
+        url: `/notes/${id}`,
+        method: "PUT",
+        body: updatedData,
+      }),
+    }),
+
     GetNote: builder.mutation({
       query: (body) => ({
         url: "/getNotes",
@@ -37,6 +55,7 @@ export const UserAuth = createApi({
         body,
       }),
     }),
+
     AddBrews: builder.mutation({
       query: (body) => ({
         url: "/addBrew",
@@ -44,12 +63,14 @@ export const UserAuth = createApi({
         body,
       }),
     }),
+
     DeleteBrews: builder.mutation({
       query: (id) => ({
         url: `/deleteBrew/${id}`,
         method: "DELETE",
       }),
     }),
+
     GetAllBrews: builder.mutation({
       query: (body) => ({
         url: "/getAllBrew",
@@ -64,6 +85,8 @@ export const {
   useSignInUserMutation,
   useSignUpUserMutation,
   useAddNoteMutation,
+  useDeleteNoteMutation,
+  useUpdateNoteMutation,
   useGetNoteMutation,
   useAddBrewsMutation,
   useDeleteBrewsMutation,
