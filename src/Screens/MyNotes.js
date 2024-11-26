@@ -175,6 +175,10 @@ const MyNotes = () => {
 
   // -----------------------------All Notes-----------------------------
   const [allNotes, setAllNotes] = useState([]);
+  const [tastingNotes, setTastingNotes] = useState([]);
+  const [brewingNotes, setBrewingNotes] = useState([]);
+  const [fermentatinNotes, setFermentationNOtes] = useState([]);
+  const [bottlingNotes, setBottingNotes] = useState([]);
   console.log("All notes", allNotes);
 
   //Modal states
@@ -246,21 +250,55 @@ const MyNotes = () => {
         date: selectedDate,
         userId: AuthData._id,
       };
+
       const notesResponce = await AddNote(payload);
-      setAllNotes((prevNotes) => [...prevNotes, notesResponce]);
       console.log("notesResponce:", notesResponce);
+
+      setAllNotes((prevNotes) => {
+        if (!Array.isArray(prevNotes)) {
+          console.error("prevNotes is not an array:", prevNotes);
+          return [];
+        }
+        return [...prevNotes, notesResponce];
+      });
     } catch (error) {
-      console.log(error);
+      console.error("Error adding note:", error);
     }
   };
 
   const getNotes = async () => {
     try {
-      const responce = await GetNotes;
-      setAllNotes(responce);
-      console.log("all notesssssssssss", responce);
-    } catch (error) {}
+      const response = await GetNotes();
+      setAllNotes(response.data);
+      console.log("All Notes:", response);
+
+      const tasting = response?.data?.filter(
+        (note) => note.categorie === "Tasting"
+      );
+      const brewing = response?.data?.filter(
+        (note) => note.categorie === "Brewing"
+      );
+      const fermentation = response?.data?.filter(
+        (note) => note.categorie === "Fermentation"
+      );
+      const bottling = response?.data?.filter(
+        (note) => note.categorie === "Bottling"
+      );
+
+      console.log("Tasting Notes:", tasting);
+      console.log("Brewing Notes:", brewing);
+      console.log("Fermentation Notes:", fermentation);
+      console.log("Bottling Notes:", bottling);
+
+      await setTastingNotes(tasting);
+      await setBrewingNotes(brewing);
+      await setFermentationNOtes(fermentation);
+      await setBottingNotes(bottling);
+    } catch (error) {
+      console.error("Error fetching notes:", error);
+    }
   };
+
   useEffect(() => {
     getNotes();
   }, []);
@@ -356,8 +394,17 @@ const MyNotes = () => {
             pb: { xs: 4, sm: 4, md: 4, lg: 0 },
           }}
         >
-          {Tasting_Notes.map(({ cat, item }) => {
-            return item.map((note, index) => (
+          {tastingNotes?.map((item, index) => {
+            const isoDate = item.date;
+            const dateObj = new Date(isoDate);
+            const options = { day: "2-digit", month: "long", year: "numeric" };
+            const formattedDate = new Intl.DateTimeFormat(
+              "nl-NL",
+              options
+            ).format(dateObj);
+            console.log(formattedDate);
+
+            return (
               <Box
                 key={index}
                 sx={{
@@ -404,7 +451,7 @@ const MyNotes = () => {
                         fontSize: { xs: "1rem", sm: "1.2rem", md: "1.5rem" },
                       }}
                     >
-                      {cat}
+                      {item.categorie}
                     </Typography>
                     <IconButton onClick={openTastingColours}>
                       <MoreVertIcon />
@@ -529,7 +576,7 @@ const MyNotes = () => {
                         maxWidth: "600px",
                         height: "auto",
                       }}
-                      src={note.img}
+                      src={noteImage}
                       alt="Tasting Note"
                     />
 
@@ -594,7 +641,7 @@ const MyNotes = () => {
                       fontSize: { xs: "0.9rem", sm: "1rem", md: "1rem" },
                     }}
                   >
-                    {note.desc}
+                    {item.description}
                   </Typography>
 
                   <Box
@@ -631,7 +678,7 @@ const MyNotes = () => {
                           },
                         }}
                       >
-                        {note.tag}
+                        {item.categorie}
                       </Typography>
                     </Box>
                     <Box
@@ -649,13 +696,13 @@ const MyNotes = () => {
                           },
                         }}
                       >
-                        {note.date}
+                        {formattedDate}
                       </Typography>
                     </Box>
                   </Box>
                 </Box>
               </Box>
-            ));
+            );
           })}
         </Grid>
         <Grid
@@ -672,8 +719,16 @@ const MyNotes = () => {
             pb: { xs: 4, sm: 4, md: 4, lg: 0 },
           }}
         >
-          {Brewing_Notes.map(({ cat, item }) => {
-            return item.map((note, index) => (
+          {Brewing_Notes.map((item, index) => {
+            const isoDate = item.date;
+            const dateObj = new Date(isoDate);
+            const options = { day: "2-digit", month: "long", year: "numeric" };
+            const formattedDate = new Intl.DateTimeFormat(
+              "nl-NL",
+              options
+            ).format(dateObj);
+            console.log(formattedDate);
+            return (
               <Box
                 key={index}
                 sx={{
@@ -720,7 +775,7 @@ const MyNotes = () => {
                         fontSize: { xs: "1rem", sm: "1.2rem", md: "1.5rem" },
                       }}
                     >
-                      {cat}
+                      {item.categorie}
                     </Typography>
                     <IconButton onClick={openBrewingColours}>
                       <MoreVertIcon />
@@ -845,7 +900,7 @@ const MyNotes = () => {
                         maxWidth: "600px",
                         height: "auto",
                       }}
-                      src={note.img}
+                      src={noteImage}
                       alt="Tasting Note"
                     />
 
@@ -910,7 +965,7 @@ const MyNotes = () => {
                       fontSize: { xs: "0.9rem", sm: "1rem", md: "1rem" },
                     }}
                   >
-                    {note.desc}
+                    {item.description}
                   </Typography>
 
                   <Box
@@ -947,7 +1002,7 @@ const MyNotes = () => {
                           },
                         }}
                       >
-                        {note.tag}
+                        {item.categorie}
                       </Typography>
                     </Box>
                     <Box
@@ -965,13 +1020,13 @@ const MyNotes = () => {
                           },
                         }}
                       >
-                        {note.date}
+                        {/* {formattedDate} */}
                       </Typography>
                     </Box>
                   </Box>
                 </Box>
               </Box>
-            ));
+            );
           })}
         </Grid>
         <Grid
@@ -1749,10 +1804,10 @@ const MyNotes = () => {
                         },
                       }}
                     >
-                      <MenuItem value={10}>Tasting</MenuItem>
-                      <MenuItem value={20}>Brewing</MenuItem>
-                      <MenuItem value={30}>Fermentation</MenuItem>
-                      <MenuItem value={30}>Bottling</MenuItem>
+                      <MenuItem value={"Tasting"}>Tasting</MenuItem>
+                      <MenuItem value={"Brewing"}>Brewing</MenuItem>
+                      <MenuItem value={"Fermentation"}>Fermentation</MenuItem>
+                      <MenuItem value={"Bottling"}>Bottling</MenuItem>
                     </Select>
                   </FormControl>
                 </Box>

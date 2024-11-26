@@ -37,6 +37,26 @@ export const UserAuth = createApi({
         body,
       }),
     }),
+    AddBrews: builder.mutation({
+      query: (body) => ({
+        url: "/addBrew",
+        method: "POST",
+        body,
+      }),
+    }),
+    DeleteBrews: builder.mutation({
+      query: (id) => ({
+        url: `/deleteBrew/${id}`,
+        method: "DELETE",
+      }),
+    }),
+    GetAllBrews: builder.mutation({
+      query: (body) => ({
+        url: "/getAllBrew",
+        method: "GET",
+        body,
+      }),
+    }),
   }),
 });
 
@@ -45,4 +65,7 @@ export const {
   useSignUpUserMutation,
   useAddNoteMutation,
   useGetNoteMutation,
+  useAddBrewsMutation,
+  useDeleteBrewsMutation,
+  useGetAllBrewsMutation,
 } = UserAuth;

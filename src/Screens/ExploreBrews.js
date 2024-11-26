@@ -1,5 +1,5 @@
 import { Box, Button, Grid, IconButton, Typography } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Nav from "../components/Navbar";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -8,6 +8,9 @@ import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlin
 import filterPng from "../assets/Images/filter.png";
 import cardImg from "../assets/Images/cardImg.png";
 import Footer from "../components/Footer";
+import CircularProgress from "@mui/material/CircularProgress";
+import { useGetAllBrewsMutation } from "../redux/apis/UserAuth";
+import { useNavigate } from "react-router-dom";
 const Cats = [
   { id: 1, value: "ALL" },
   { id: 2, value: "TASTING" },
@@ -57,8 +60,32 @@ const cards = [
   },
 ];
 const ExploreBrews = ({ route }) => {
+  const navigation = useNavigate();
   const [selectedCat, setSelectedCat] = useState(0);
   const [hoveredIndex, setHoveredIndex] = useState(null);
+  const [allBrews, setAllBrews] = useState([]);
+  const [getAllBrew, { isLoading, isError }] = useGetAllBrewsMutation();
+
+  // const handleSharedBrew = ({ shareableLink }) => {
+  //   navigation("/ShareableBrew");
+  //   console.log("after on click:", shareableLink);
+  // };
+
+  // ------------------Getting brews------------------
+  const getAllBrews = async () => {
+    try {
+      const allBrews = await getAllBrew();
+      setAllBrews(allBrews.data.data);
+      console.log("all Brews:", allBrews);
+    } catch (error) {
+      console.log("error on geting all brews.");
+    }
+  };
+
+  useEffect(() => {
+    getAllBrews();
+  }, []);
+
   return (
     <Box>
       <Box
@@ -174,7 +201,7 @@ const ExploreBrews = ({ route }) => {
               style={{
                 maxWidth: "100%",
                 height: "auto",
-                display: "block", // Always display the filter icon
+                display: "block",
               }}
             />
             <Button
@@ -225,172 +252,195 @@ const ExploreBrews = ({ route }) => {
             my: 1,
           }}
         >
-          {cards.map((item, index) => (
-            <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
-              <Box
-                sx={{
-                  backgroundColor: "#ffffff",
-                  padding: { xs: "12px", sm: "16px" },
-                  borderRadius: "1rem",
-                  borderColor: "#000",
-                  borderWidth: hoveredIndex === index ? "0.05rem" : 0,
-                  borderStyle: "solid",
-                  transition: "border-width 0.3s, box-shadow 0.3s",
-                  boxShadow:
-                    hoveredIndex === index
-                      ? "0 4px 20px rgba(0, 0, 0, 0.1)"
-                      : "none",
-                }}
-                onMouseEnter={() => setHoveredIndex(index)}
-                onMouseLeave={() => setHoveredIndex(null)}
-              >
+          {isLoading ? (
+            <Grid
+              item
+              xs={12}
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                height: "100vh",
+                my: 3,
+                position: "absolute",
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                zIndex: 9999,
+              }}
+            >
+              <CircularProgress color="Black" />
+            </Grid>
+          ) : (
+            allBrews.map((item, index) => (
+              <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
                 <Box
-                  sx={{
-                    display: "flex",
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                    alignItems: "flex-start",
+                  onClick={() => {
+                    console.log(item.shareableLink);
                   }}
+                  sx={{
+                    backgroundColor: "#ffffff",
+                    padding: { xs: "12px", sm: "16px" },
+                    borderRadius: "1rem",
+                    borderColor: "#000",
+                    borderWidth: hoveredIndex === index ? "0.05rem" : 0,
+                    borderStyle: "solid",
+                    transition: "border-width 0.3s, box-shadow 0.3s",
+                    boxShadow:
+                      hoveredIndex === index
+                        ? "0 4px 20px rgba(0, 0, 0, 0.1)"
+                        : "none",
+                  }}
+                  onMouseEnter={() => setHoveredIndex(index)}
+                  onMouseLeave={() => setHoveredIndex(null)}
                 >
-                  <Box sx={{ flex: 1 }}>
-                    <Typography
-                      variant="h6"
-                      sx={{
-                        fontWeight: "500",
-                        fontSize: { xs: "1.2rem", sm: "1.5rem" },
-                      }}
-                    >
-                      {item.name}
-                    </Typography>
-                    <Typography
-                      variant="body2"
-                      sx={{
-                        color: "#FF6F61",
-                        fontSize: { xs: "0.9rem", sm: "1rem" },
-                      }}
-                    >
-                      {item.status}
-                    </Typography>
-                  </Box>
                   <Box
                     sx={{
                       display: "flex",
                       flexDirection: "row",
-                      gap: "7%",
                       justifyContent: "space-between",
-                      //   width: "100%",
+                      alignItems: "flex-start",
                     }}
                   >
-                    <IconButton
+                    <Box sx={{ flex: 1 }}>
+                      <Typography
+                        variant="h6"
+                        sx={{
+                          fontWeight: "500",
+                          fontSize: { xs: "1.2rem", sm: "1.5rem" },
+                        }}
+                      >
+                        {item.brewName}
+                      </Typography>
+                      <Typography
+                        variant="body2"
+                        sx={{
+                          color: "#FF6F61",
+                          fontSize: { xs: "0.9rem", sm: "1rem" },
+                        }}
+                      >
+                        {item.status}
+                      </Typography>
+                    </Box>
+                    <Box
                       sx={{
                         display: "flex",
-                        backgroundColor: "#EBEDEF",
+                        flexDirection: "row",
+                        gap: "7%",
+                        justifyContent: "space-between",
                       }}
-                      aria-label="Heart"
                     >
-                      <FavoriteBorderOutlinedIcon sx={{ color: "#031D2D" }} />
-                    </IconButton>
-                    <IconButton
-                      sx={{
-                        display: { xs: "none", md: "none" },
-                        backgroundColor: "#F6D9D6",
-                        "&:hover": {
-                          backgroundColor: "#FFE2DF",
-                        },
-                      }}
-                      aria-label="delete"
-                    >
-                      <DeleteIcon sx={{ color: "#FF6F61" }} />
-                    </IconButton>
-                    <IconButton
-                      sx={{
-                        display: { xs: "none", md: "none" },
-                        backgroundColor: "#E1E3E5",
-                        "&:hover": {
-                          backgroundColor: "#CDD2D5",
-                        },
-                      }}
-                      aria-label="edit"
-                    >
-                      <EditIcon sx={{ color: "#000" }} />
-                    </IconButton>
+                      <IconButton
+                        sx={{
+                          display: "flex",
+                          backgroundColor: "#EBEDEF",
+                        }}
+                        aria-label="Heart"
+                      >
+                        <FavoriteBorderOutlinedIcon sx={{ color: "#031D2D" }} />
+                      </IconButton>
+                      <IconButton
+                        sx={{
+                          display: { xs: "none", md: "none" },
+                          backgroundColor: "#F6D9D6",
+                          "&:hover": {
+                            backgroundColor: "#FFE2DF",
+                          },
+                        }}
+                        aria-label="delete"
+                      >
+                        <DeleteIcon sx={{ color: "#FF6F61" }} />
+                      </IconButton>
+                      <IconButton
+                        sx={{
+                          display: { xs: "none", md: "none" },
+                          backgroundColor: "#E1E3E5",
+                          "&:hover": {
+                            backgroundColor: "#CDD2D5",
+                          },
+                        }}
+                        aria-label="edit"
+                      >
+                        <EditIcon sx={{ color: "#000" }} />
+                      </IconButton>
+                    </Box>
                   </Box>
+                  {hoveredIndex === index ? (
+                    <Box
+                      sx={{
+                        width: "100%",
+                        height: { xs: "auto", sm: "17.1rem" }, // Responsive height
+                        marginTop: "0.7rem",
+                        display: "flex",
+                        flexDirection: "column",
+                        justifyContent: "space-around",
+                        transition: "opacity 0.3s ease, transform 0.3s ease",
+                        opacity: hoveredIndex === index ? 1 : 0,
+                        transform:
+                          hoveredIndex === index ? "scale(1)" : "scale(0.95)",
+                      }}
+                    >
+                      <Typography
+                        sx={{
+                          color: "gray",
+                          maxWidth: "22rem",
+                          textAlign: "justify",
+                          fontSize: { xs: "0.8rem", sm: "1rem" }, // Responsive font size
+                        }}
+                      >
+                        {item.description}
+                      </Typography>
+                      <Grid container spacing={2}>
+                        <Grid item xs={6}>
+                          <Box>
+                            <Typography variant="body2" sx={{ color: "gray" }}>
+                              Bottle Size
+                            </Typography>
+                            <Typography variant="h6" sx={{ color: "#000" }}>
+                              {item.bottleSize}
+                            </Typography>
+                          </Box>
+                        </Grid>
+                        <Grid item xs={6}>
+                          <Box
+                            sx={{
+                              display: "flex",
+                              flexDirection: "column",
+                              justifyContent: "center",
+                              alignItems: "flex-end",
+                              textAlign: "left",
+                            }}
+                          >
+                            <Typography variant="body2" sx={{ color: "gray" }}>
+                              Release Date
+                            </Typography>
+                            <Typography variant="h6" sx={{ color: "#000" }}>
+                              {item.date}
+                            </Typography>
+                          </Box>
+                        </Grid>
+                      </Grid>
+                    </Box>
+                  ) : (
+                    <img
+                      src={cardImg}
+                      alt={cardImg}
+                      style={{
+                        width: "100%",
+                        height: "auto",
+                        marginTop: "0.7rem",
+                        transition: "transform 0.3s ease",
+                        borderRadius: "1rem",
+                      }}
+                    />
+                  )}
                 </Box>
-                {hoveredIndex === index ? (
-                  <Box
-                    sx={{
-                      width: "100%",
-                      height: { xs: "auto", sm: "17.1rem" }, // Responsive height
-                      marginTop: "0.7rem",
-                      display: "flex",
-                      flexDirection: "column",
-                      justifyContent: "space-around",
-                      transition: "opacity 0.3s ease, transform 0.3s ease",
-                      opacity: hoveredIndex === index ? 1 : 0,
-                      transform:
-                        hoveredIndex === index ? "scale(1)" : "scale(0.95)",
-                    }}
-                  >
-                    <Typography
-                      sx={{
-                        color: "gray",
-                        maxWidth: "22rem",
-                        textAlign: "justify",
-                        fontSize: { xs: "0.8rem", sm: "1rem" }, // Responsive font size
-                      }}
-                    >
-                      A light and refreshing ale with citrusy notes, perfect for
-                      summer days. Brewed with the finest hops and a touch of
-                      honey for a smooth finish.
-                    </Typography>
-                    <Grid container spacing={2}>
-                      <Grid item xs={6}>
-                        <Box>
-                          <Typography variant="body2" sx={{ color: "gray" }}>
-                            Bottle Size
-                          </Typography>
-                          <Typography variant="h6" sx={{ color: "#000" }}>
-                            500ml
-                          </Typography>
-                        </Box>
-                      </Grid>
-                      <Grid item xs={6}>
-                        <Box
-                          sx={{
-                            display: "flex",
-                            flexDirection: "column",
-                            justifyContent: "center",
-                            alignItems: "flex-end",
-                            textAlign: "left",
-                          }}
-                        >
-                          <Typography variant="body2" sx={{ color: "gray" }}>
-                            Release Date
-                          </Typography>
-                          <Typography variant="h6" sx={{ color: "#000" }}>
-                            June 2024
-                          </Typography>
-                        </Box>
-                      </Grid>
-                    </Grid>
-                  </Box>
-                ) : (
-                  <img
-                    src={item.img}
-                    alt={item.name}
-                    style={{
-                      width: "100%",
-                      height: "auto",
-                      marginTop: "0.7rem",
-                      transition: "transform 0.3s ease",
-                      borderRadius: "1rem",
-                    }}
-                  />
-                )}
-              </Box>
-            </Grid>
-          ))}
+              </Grid>
+            ))
+          )}
         </Grid>
+
         <Grid
           container
           sx={{
