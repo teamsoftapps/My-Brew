@@ -1,4 +1,11 @@
-import { Box, Button, Grid, IconButton, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Grid,
+  IconButton,
+  TextareaAutosize,
+  Typography,
+} from "@mui/material";
 import React, { useEffect, useState } from "react";
 import Nav from "../components/Navbar";
 import AddIcon from "@mui/icons-material/Add";
@@ -11,6 +18,7 @@ import Footer from "../components/Footer";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useGetAllBrewsMutation } from "../redux/apis/UserAuth";
 import { useNavigate } from "react-router-dom";
+import moment from "moment";
 const Cats = [
   { id: 1, value: "ALL" },
   { id: 2, value: "TASTING" },
@@ -252,27 +260,7 @@ const ExploreBrews = ({ route }) => {
             my: 1,
           }}
         >
-          {isLoading ? (
-            <Grid
-              item
-              xs={12}
-              sx={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                height: "100vh",
-                my: 3,
-                position: "absolute",
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0,
-                zIndex: 9999,
-              }}
-            >
-              <CircularProgress color="Black" />
-            </Grid>
-          ) : (
+          {allBrews.length > 0 ? (
             allBrews.map((item, index) => (
               <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
                 <Box
@@ -370,7 +358,7 @@ const ExploreBrews = ({ route }) => {
                     <Box
                       sx={{
                         width: "100%",
-                        height: { xs: "auto", sm: "17.1rem" }, // Responsive height
+                        height: { xs: "auto", sm: "17.1rem" },
                         marginTop: "0.7rem",
                         display: "flex",
                         flexDirection: "column",
@@ -381,16 +369,27 @@ const ExploreBrews = ({ route }) => {
                           hoveredIndex === index ? "scale(1)" : "scale(0.95)",
                       }}
                     >
-                      <Typography
-                        sx={{
-                          color: "gray",
+                      <div
+                        style={{
+                          color: "black",
                           maxWidth: "22rem",
-                          textAlign: "justify",
-                          fontSize: { xs: "0.8rem", sm: "1rem" }, // Responsive font size
+                          textAlign: "left",
+                          fontSize: "1.2rem",
+                          fontWeight: "normal",
+                          border: "none",
+                          outline: "none",
+                          padding: "0",
+                          resize: "none",
+                          overflowY: "auto",
+                          width: "100%",
+                          maxHeight: "10rem",
+                          whiteSpace: "pre-wrap",
+                          wordWrap: "break-word",
                         }}
                       >
                         {item.description}
-                      </Typography>
+                      </div>
+
                       <Grid container spacing={2}>
                         <Grid item xs={6}>
                           <Box>
@@ -398,7 +397,7 @@ const ExploreBrews = ({ route }) => {
                               Bottle Size
                             </Typography>
                             <Typography variant="h6" sx={{ color: "#000" }}>
-                              {item.bottleSize}
+                              {item.bottleSize}ml
                             </Typography>
                           </Box>
                         </Grid>
@@ -416,7 +415,7 @@ const ExploreBrews = ({ route }) => {
                               Release Date
                             </Typography>
                             <Typography variant="h6" sx={{ color: "#000" }}>
-                              {item.date}
+                              {moment(item.date).format("DD/MM/YYYY")}
                             </Typography>
                           </Box>
                         </Grid>
@@ -438,6 +437,20 @@ const ExploreBrews = ({ route }) => {
                 </Box>
               </Grid>
             ))
+          ) : (
+            <Box sx={{ width: "100%" }}>
+              <Typography
+                variant="h6"
+                color="#999"
+                sx={{
+                  fontSize: { xs: "1rem", sm: "1.2rem", md: "1.5rem" },
+                  textAlign: "center",
+                  mt: 4,
+                }}
+              >
+                No Brews...
+              </Typography>
+            </Box>
           )}
         </Grid>
 

@@ -25,6 +25,30 @@ export const UserAuth = createApi({
       }),
     }),
 
+    ForgetPassword: builder.mutation({
+      query: (body) => ({
+        url: "/forgetPassword",
+        method: "POST",
+        body,
+      }),
+    }),
+
+    VerifyOTp: builder.mutation({
+      query: (body) => ({
+        url: "/verifyOtp",
+        method: "POST",
+        body,
+      }),
+    }),
+
+    ResetPassword: builder.mutation({
+      query: ({ email, isPassword }) => ({
+        url: `/resetPassword`,
+        method: "POST",
+        body: { email, isPassword },
+      }),
+    }),
+
     AddNote: builder.mutation({
       query: (body) => ({
         url: "/addNotes",
@@ -42,7 +66,7 @@ export const UserAuth = createApi({
 
     updateNote: builder.mutation({
       query: ({ id, updatedData }) => ({
-        url: `/notes/${id}`,
+        url: `/updateNotes/${id}`,
         method: "PUT",
         body: updatedData,
       }),
@@ -78,12 +102,21 @@ export const UserAuth = createApi({
         body,
       }),
     }),
+    GetBrew: builder.mutation({
+      query: (slug) => ({
+        url: `/getBrew/${slug}`,
+        method: "GET",
+      }),
+    }),
   }),
 });
 
 export const {
   useSignInUserMutation,
   useSignUpUserMutation,
+  useForgetPasswordMutation,
+  useVerifyOTpMutation,
+  useResetPasswordMutation,
   useAddNoteMutation,
   useDeleteNoteMutation,
   useUpdateNoteMutation,
@@ -91,4 +124,5 @@ export const {
   useAddBrewsMutation,
   useDeleteBrewsMutation,
   useGetAllBrewsMutation,
+  useGetBrewMutation,
 } = UserAuth;

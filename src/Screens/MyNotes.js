@@ -13,7 +13,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
 import Footer from "../components/Footer";
 import noteImage from "../assets/Images/noteImage.png";
@@ -27,6 +27,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import CloseIcon from "@mui/icons-material/Close";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { styled } from "@mui/material/styles";
+import dayjs from "dayjs";
 import {
   resetCategoryColor,
   setCategoryColor,
@@ -34,9 +35,9 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import {
   useAddNoteMutation,
-  useDeleteBrewsMutation,
   useDeleteNoteMutation,
   useGetNoteMutation,
+  useUpdateNoteMutation,
 } from "../redux/apis/UserAuth";
 import moment from "moment";
 const Tasting_Notes = [
@@ -189,6 +190,9 @@ const MyNotes = () => {
   const [bottlingNotes, setBottingNotes] = useState([]);
   console.log("All notes", allNotes);
 
+  // -----------------------------Extra states-----------------------------
+  const [currentNoteId, setCurrentNoteId] = useState(null);
+  const [isEditing, setIsEditing] = useState(false);
   //Modal states
   const [isModal, setIsModal] = useState(false);
   const [type, setType] = useState();
@@ -221,7 +225,7 @@ const MyNotes = () => {
   const [AddNote] = useAddNoteMutation();
   const [GetNotes] = useGetNoteMutation();
   const [deleteNotes] = useDeleteNoteMutation();
-
+  const [updateNotess] = useUpdateNoteMutation();
   // -----------------------------Modal functions-----------------------------
   const handleCloseModal = () => {
     setIsModal(false);
@@ -229,9 +233,12 @@ const MyNotes = () => {
   const handleDescriptionChange = (event) => {
     setDescription(event.target.value);
   };
-  const handleDateChange = (date) => {
-    setSelectedDate(date);
+
+  const handleDateChange = (newDate) => {
+    setSelectedDate(newDate);
+    console.log("dateeeeeee", newDate);
   };
+
   const handleTypeChange = (event) => {
     setType(event.target.value);
   };
@@ -287,28 +294,42 @@ const MyNotes = () => {
 
   const addNotes = async () => {
     try {
-      let payload = {
+      const payload = {
         description: description,
         categorie: type,
         date: selectedDate,
         userId: AuthData._id,
       };
-
-      const notesResponce = await AddNote(payload);
+      if (isEditing) {
+        const updatedResponse = await updateNotess({
+          id: currentNoteId,
+          updatedData: payload,
+        });
+        console.log("Note updated:", updatedResponse);
+        setAllNotes((prevNotes) =>
+          prevNotes.map((note) =>
+            note._id === currentNoteId ? { ...note, ...payload } : note
+          )
+        );
+      } else {
+        const notesResponse = await AddNote(payload);
+        console.log("Note added:", notesResponse);
+        // setAllNotes((prevNotes) => [...prevNotes, notesResponse]);
+        setAllNotes((prevNotes = []) => [...prevNotes, notesResponse]);
+      }
       getNotes();
-      console.log("notesResponce:", notesResponce);
-
-      setAllNotes((prevNotes) => {
-        if (!Array.isArray(prevNotes)) {
-          console.error("prevNotes is not an array:", prevNotes);
-          return [];
-        }
-        return [...prevNotes, notesResponce];
-      });
+      setDescription("");
+      setType("");
+      setSelectedDate("");
+      setIsModal(false);
+      setIsEditing(false);
+      setCurrentNoteId(null);
     } catch (error) {
-      console.error("Error adding note:", error);
+      console.error(
+        isEditing ? "Error updating note:" : "Error adding note:",
+        error
+      );
     }
-    setIsModal(false);
   };
 
   const deleteNote = async (id) => {
@@ -321,50 +342,15 @@ const MyNotes = () => {
     }
   };
 
-  // const updateNote = async (id, updatedData) => {
-  //   try {
-  //     const response = await UpdateNote(id, updatedData);.
-
-  //     if (response.status === 200) {
-  //       console.log("Note updated successfully:", response.data);
-  //       setAllNotes((prevNotes) =>
-  //         prevNotes.map((note) =>
-  //           note._id === id ? { ...note, ...updatedData } : note
-  //         )
-  //       );
-  //       const updatedNote = { ...response.data };
-  //       const updatedCategory = updatedNote.categorie;
-
-  //       if (updatedCategory === "Tasting") {
-  //         setTastingNotes((prevNotes) =>
-  //           prevNotes.map((note) =>
-  //             note._id === id ? { ...note, ...updatedData } : note
-  //           )
-  //         );
-  //       } else if (updatedCategory === "Brewing") {
-  //         setBrewingNotes((prevNotes) =>
-  //           prevNotes.map((note) =>
-  //             note._id === id ? { ...note, ...updatedData } : note
-  //           )
-  //         );
-  //       } else if (updatedCategory === "Fermentation") {
-  //         setFermentationNotes((prevNotes) =>
-  //           prevNotes.map((note) =>
-  //             note._id === id ? { ...note, ...updatedData } : note
-  //           )
-  //         );
-  //       } else if (updatedCategory === "Bottling") {
-  //         setBottingNotes((prevNotes) =>
-  //           prevNotes.map((note) =>
-  //             note._id === id ? { ...note, ...updatedData } : note
-  //           )
-  //         );
-  //       }
-  //     }
-  //   } catch (error) {
-  //     console.error("Error updating note:", error);
-  //   }
-  // };
+  const handleEditNote = (note) => {
+    console.log("first", note);
+    setDescription(note.description);
+    setType(note.categorie);
+    setSelectedDate(note.date);
+    setCurrentNoteId(note._id);
+    setIsEditing(true);
+    setIsModal(true);
+  };
 
   useEffect(() => {
     getNotes();
@@ -465,7 +451,6 @@ const MyNotes = () => {
             tastingNotes?.map((item, index) => {
               const isoDate = item.date;
               const formattedDate = moment(isoDate).format("DD/MM/YYYY");
-
               return (
                 <Box
                   key={index}
@@ -679,9 +664,7 @@ const MyNotes = () => {
                           <DeleteIcon sx={{ color: "#FF6F61" }} />
                         </Box>
                         <Box
-                          onClick={() => {
-                            setIsModal(true);
-                          }}
+                          onClick={() => handleEditNote(item)}
                           sx={{
                             height: { xs: 30, sm: 30, md: 40, lg: 40 },
                             width: { xs: 30, sm: 30, md: 40, lg: 40 },
@@ -1013,9 +996,7 @@ const MyNotes = () => {
                           <DeleteIcon sx={{ color: "#FF6F61" }} />
                         </Box>
                         <Box
-                          onClick={() => {
-                            setIsModal(true);
-                          }}
+                          onClick={() => handleEditNote(item)}
                           sx={{
                             height: { xs: 30, sm: 30, md: 40, lg: 40 },
                             width: { xs: 30, sm: 30, md: 40, lg: 40 },
@@ -1350,9 +1331,7 @@ const MyNotes = () => {
                           <DeleteIcon sx={{ color: "#FF6F61" }} />
                         </Box>
                         <Box
-                          onClick={() => {
-                            setIsModal(true);
-                          }}
+                          onClick={() => handleEditNote(item)}
                           sx={{
                             height: { xs: 30, sm: 30, md: 40, lg: 40 },
                             width: { xs: 30, sm: 30, md: 40, lg: 40 },
@@ -1693,9 +1672,7 @@ const MyNotes = () => {
                           <DeleteIcon sx={{ color: "#FF6F61" }} />
                         </Box>
                         <Box
-                          onClick={() => {
-                            setIsModal(true);
-                          }}
+                          onClick={() => handleEditNote(item)}
                           sx={{
                             height: { xs: 30, sm: 30, md: 40, lg: 40 },
                             width: { xs: 30, sm: 30, md: 40, lg: 40 },
@@ -1940,7 +1917,9 @@ const MyNotes = () => {
                     <DatePicker
                       sx={{ width: "100%" }}
                       label="Select a Date"
-                      value={selectedDate}
+                      value={
+                        selectedDate ? dayjs(selectedDate, "DD/MM/YYYY") : null
+                      }
                       onChange={handleDateChange}
                       renderInput={(params) => (
                         <StyledTextField {...params} fullWidth />
@@ -1997,7 +1976,7 @@ const MyNotes = () => {
                     },
                   }}
                 >
-                  Save Note
+                  {isEditing ? "Update Note" : "Save Note"}
                 </Button>
               </Box>
             </Box>

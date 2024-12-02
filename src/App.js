@@ -6,15 +6,12 @@ import MainStack from "./navigation/mainStack";
 import PublicStack from "./navigation/PublicStack";
 
 const App = () => {
-  const token = useSelector((state) => state?.Auth?.data?.isToken); // Retrieve token from state
+  const token = useSelector((state) => state?.Auth?.data?.isToken);
 
   return (
     <Router>
+      <PublicStack />
       <Routes>
-        {/* Use the '*' at the end to allow for nested routes */}
-        <Route path="/products/getBrew/:slug/*" element={<PublicStack />} />
-
-        {/* Auth-related routes */}
         {token ? (
           <Route path="/*" element={<MainStack />} />
         ) : (

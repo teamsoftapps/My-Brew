@@ -8,6 +8,7 @@ import {
   MenuItem,
   Modal,
   Select,
+  TextareaAutosize,
   TextField,
   Typography,
 } from "@mui/material";
@@ -16,8 +17,10 @@ import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import filterPng from "../assets/Images/filter.png";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import cardImg from "../assets/Images/cardImg.png";
 import Footer from "../components/Footer";
+import { styled } from "@mui/material/styles";
 import {
   useAddBrewsMutation,
   useDeleteBrewsMutation,
@@ -26,7 +29,6 @@ import {
 import { useSelector } from "react-redux";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import styled from "@emotion/styled";
 import moment from "moment";
 const Cats = [
   { id: 1, value: "ALL" },
@@ -78,7 +80,6 @@ const cards = [
 ];
 const BrewCollection = () => {
   const authData = useSelector((state) => state?.Auth?.data);
-  console.log("first", authData);
   const [selectedCat, setSelectedCat] = useState(0);
   const [isModal, setIsModal] = useState(false);
   const [hoveredIndex, setHoveredIndex] = useState(null);
@@ -86,14 +87,14 @@ const BrewCollection = () => {
   const [getAllBrew, { isLoading, isError }] = useGetAllBrewsMutation();
   const [Addbrews] = useAddBrewsMutation();
   const [deleteBrews] = useDeleteBrewsMutation();
-
+  console.log("first", allBrews);
   // ---------------Modal states---------------
   const [brewName, setBrewName] = useState("");
   const [brewStatus, setBrewStatus] = useState("");
   const [description, setDescription] = useState("");
   const [bottleSize, setBottleSize] = useState("");
   const [selectedDate, setSelectedDate] = useState(null);
-
+  const [brewImage, setBrewImage] = useState({});
   const StyledTextField = styled(TextField)(({ theme }) => ({
     "& .MuiOutlinedInput-root": {
       "& fieldset": {
@@ -112,25 +113,53 @@ const BrewCollection = () => {
       },
     },
   }));
+
   const handleCloseModal = () => {
     setIsModal(false);
   };
+
   const handleDescriptionChange = (event) => {
     setDescription(event.target.value);
   };
+
   const handleBottleSizeChange = (event) => {
     setBottleSize(event.target.value);
   };
+
   const handleDateChange = (date) => {
     console.log("dataaaaa", date);
     setSelectedDate(date);
   };
+
   const handleBrewName = (event) => {
     setBrewName(event.target.value);
   };
+
   const handleBrewStatus = (event) => {
     setBrewStatus(event.target.value);
   };
+
+  const handleImage = (event) => {
+    const files = event.target.files;
+    if (files && files[0]) {
+      setBrewImage(files[0]);
+    }
+
+    console.log("first", brewImage);
+  };
+
+  const VisuallyHiddenInput = styled("input")({
+    clip: "rect(0 0 0 0)",
+    clipPath: "inset(50%)",
+    height: 1,
+    overflow: "hidden",
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    whiteSpace: "nowrap",
+    width: 1,
+  });
+
   // ------------------API's Calling------------------
   const getAllBrews = async () => {
     try {
@@ -152,22 +181,23 @@ const BrewCollection = () => {
         !brewStatus ||
         !description ||
         !bottleSize ||
-        !selectedDate
+        !selectedDate ||
+        !brewImage
       ) {
         console.log("All fields are required");
         return;
       }
 
-      let payload = {
-        brewName: brewName,
-        status: brewStatus,
-        description: description,
-        bottleSize: bottleSize,
-        date: selectedDate,
-        userId: authData._id,
-      };
+      const formData = new FormData();
+      formData.append("brewName", brewName);
+      formData.append("status", brewStatus);
+      formData.append("description", description);
+      formData.append("bottleSize", bottleSize);
+      formData.append("date", selectedDate);
+      formData.append("userId", authData._id);
+      formData.append("image", brewImage);
 
-      const addBrew = await Addbrews(payload);
+      const addBrew = await Addbrews(formData);
       setIsModal(!isModal);
       getAllBrews();
       console.log("Brew added successfully", addBrew);
@@ -301,7 +331,7 @@ const BrewCollection = () => {
               style={{
                 maxWidth: "100%",
                 height: "auto",
-                display: "block", // Always display the filter icon
+                display: "block",
               }}
             />
             <Button
@@ -318,14 +348,14 @@ const BrewCollection = () => {
                   },
                 },
                 padding: { xs: "0.5rem 1rem", sm: "0.6rem 2rem" },
-                position: { xs: "fixed", sm: "fixed", md: "static" }, // Float only on xs and sm
-                right: { xs: "1rem", sm: "2rem" }, // Position from the right
-                bottom: { xs: "1rem", sm: "2rem" }, // Position from the bottom
+                position: { xs: "fixed", sm: "fixed", md: "static" },
+                right: { xs: "1rem", sm: "2rem" },
+                bottom: { xs: "1rem", sm: "2rem" },
                 borderRadius: "1.5rem",
                 maxWidth: "100%",
                 minWidth: { xs: "0", sm: "15rem" },
                 transition: "background-color 0.3s ease",
-                zIndex: 1000, // Ensure the button stays on top of other elements
+                zIndex: 1000,
                 "@keyframes rotate": {
                   "0%": {
                     transform: "rotate(0deg)",
@@ -354,168 +384,199 @@ const BrewCollection = () => {
             my: 1,
           }}
         >
-          {allBrews.map((item, index) => {
-            const isoDate = item.date;
-            const formattedDate = moment(isoDate).format("DD/MM/YYYY");
-            return (
-              <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
-                <Box
-                  sx={{
-                    backgroundColor: "#ffffff",
-                    padding: { xs: "12px", sm: "16px" },
-                    borderRadius: "1rem",
-                    borderColor: "#000",
-                    borderWidth: hoveredIndex === index ? "0.05rem" : 0,
-                    borderStyle: "solid",
-                    transition: "border-width 0.3s, box-shadow 0.3s",
-                    boxShadow:
-                      hoveredIndex === index
-                        ? "0 4px 20px rgba(0, 0, 0, 0.1)"
-                        : "none",
-                  }}
-                  onMouseEnter={() => setHoveredIndex(index)}
-                  onMouseLeave={() => setHoveredIndex(null)}
-                >
+          {allBrews.length > 0 ? (
+            allBrews.map((item, index) => {
+              const isoDate = item.date;
+              const formattedDate = moment(isoDate).format("DD/MM/YYYY");
+              return (
+                <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
                   <Box
                     sx={{
-                      display: "flex",
-                      flexDirection: "row",
-                      justifyContent: "space-between",
-                      alignItems: "flex-start",
+                      backgroundColor: "#ffffff",
+                      padding: { xs: "12px", sm: "16px" },
+                      borderRadius: "1rem",
+                      borderColor: "#000",
+                      borderWidth: hoveredIndex === index ? "0.05rem" : 0,
+                      borderStyle: "solid",
+                      transition: "border-width 0.3s, box-shadow 0.3s",
+                      boxShadow:
+                        hoveredIndex === index
+                          ? "0 4px 20px rgba(0, 0, 0, 0.1)"
+                          : "none",
                     }}
+                    onMouseEnter={() => setHoveredIndex(index)}
+                    onMouseLeave={() => setHoveredIndex(null)}
                   >
-                    <Box sx={{ flex: 1 }}>
-                      <Typography
-                        variant="h6"
-                        sx={{
-                          fontWeight: "500",
-                          fontSize: { xs: "1.2rem", sm: "1.5rem" },
-                        }}
-                      >
-                        {item.brewName}
-                      </Typography>
-                      <Typography
-                        variant="body2"
-                        sx={{
-                          color: "#FF6F61",
-                          fontSize: { xs: "0.9rem", sm: "1rem" },
-                        }}
-                      >
-                        {item.status}
-                      </Typography>
-                    </Box>
                     <Box
                       sx={{
                         display: "flex",
                         flexDirection: "row",
-                        gap: "7%",
                         justifyContent: "space-between",
-                        //   width: "100%",
+                        alignItems: "flex-start",
                       }}
                     >
-                      <IconButton
-                        onClick={() => {
-                          deleteBrew(item._id);
-                        }}
+                      <Box sx={{ flex: 1 }}>
+                        <Typography
+                          variant="h6"
+                          sx={{
+                            fontWeight: "500",
+                            fontSize: { xs: "1.2rem", sm: "1.5rem" },
+                          }}
+                        >
+                          {item.brewName}
+                        </Typography>
+                        <Typography
+                          variant="body2"
+                          sx={{
+                            color: "#FF6F61",
+                            fontSize: { xs: "0.9rem", sm: "1rem" },
+                          }}
+                        >
+                          {item.status}
+                        </Typography>
+                      </Box>
+                      <Box
                         sx={{
-                          backgroundColor: "#F6D9D6",
-                          "&:hover": {
-                            backgroundColor: "#FFE2DF",
-                          },
+                          display: "flex",
+                          flexDirection: "row",
+                          gap: "7%",
+                          justifyContent: "space-between",
                         }}
-                        aria-label="delete"
                       >
-                        <DeleteIcon sx={{ color: "#FF6F61" }} />
-                      </IconButton>
-                      <IconButton
-                        sx={{
-                          backgroundColor: "#E1E3E5",
-                          "&:hover": {
-                            backgroundColor: "#CDD2D5",
-                          },
-                        }}
-                        aria-label="edit"
-                      >
-                        <EditIcon sx={{ color: "#000" }} />
-                      </IconButton>
+                        <IconButton
+                          onClick={() => {
+                            deleteBrew(item._id);
+                          }}
+                          sx={{
+                            backgroundColor: "#F6D9D6",
+                            "&:hover": {
+                              backgroundColor: "#FFE2DF",
+                            },
+                          }}
+                          aria-label="delete"
+                        >
+                          <DeleteIcon sx={{ color: "#FF6F61" }} />
+                        </IconButton>
+                        <IconButton
+                          sx={{
+                            backgroundColor: "#E1E3E5",
+                            "&:hover": {
+                              backgroundColor: "#CDD2D5",
+                            },
+                          }}
+                          aria-label="edit"
+                        >
+                          <EditIcon sx={{ color: "#000" }} />
+                        </IconButton>
+                      </Box>
                     </Box>
+                    {hoveredIndex === index ? (
+                      <Box
+                        sx={{
+                          width: "100%",
+                          height: { xs: "auto", sm: "17.1rem" },
+                          marginTop: "0.7rem",
+                          display: "flex",
+                          flexDirection: "column",
+                          justifyContent: "space-around",
+                          transition: "opacity 0.3s ease, transform 0.3s ease",
+                          opacity: hoveredIndex === index ? 1 : 0,
+                          transform:
+                            hoveredIndex === index ? "scale(1)" : "scale(0.95)",
+                        }}
+                      >
+                        <div
+                          style={{
+                            color: "black",
+                            maxWidth: "22rem",
+                            textAlign: "left",
+                            fontSize: "1.2rem",
+                            fontWeight: "normal",
+                            border: "none",
+                            outline: "none",
+                            padding: "0",
+                            resize: "none",
+                            overflowY: "auto",
+                            width: "100%",
+                            maxHeight: "10rem",
+                            whiteSpace: "pre-wrap",
+                            wordWrap: "break-word",
+                          }}
+                        >
+                          {item.description}
+                        </div>
+
+                        <Grid container spacing={2}>
+                          <Grid item xs={6}>
+                            <Box>
+                              <Typography
+                                variant="body2"
+                                sx={{ color: "gray" }}
+                              >
+                                Bottle Size
+                              </Typography>
+                              <Typography variant="h6" sx={{ color: "#000" }}>
+                                {item.bottleSize}ml
+                              </Typography>
+                            </Box>
+                          </Grid>
+                          <Grid item xs={6}>
+                            <Box
+                              sx={{
+                                display: "flex",
+                                flexDirection: "column",
+                                justifyContent: "center",
+                                alignItems: "flex-end",
+                                textAlign: "left",
+                              }}
+                            >
+                              <Typography
+                                variant="body2"
+                                sx={{ color: "gray" }}
+                              >
+                                Release Date
+                              </Typography>
+                              <Typography variant="h6" sx={{ color: "#000" }}>
+                                {formattedDate}
+                              </Typography>
+                            </Box>
+                          </Grid>
+                        </Grid>
+                      </Box>
+                    ) : (
+                      <img
+                        src={item.image}
+                        alt={allBrews.image}
+                        style={{
+                          width: "100%",
+                          height: "30vh",
+                          maxHeight: "400px",
+                          marginTop: "0.7rem",
+                          transition: "transform 0.3s ease",
+                          borderRadius: "1rem",
+                          objectFit: "cover",
+                        }}
+                      />
+                    )}
                   </Box>
-                  {hoveredIndex === index ? (
-                    <Box
-                      sx={{
-                        width: "100%",
-                        height: { xs: "auto", sm: "17.1rem" }, // Responsive height
-                        marginTop: "0.7rem",
-                        display: "flex",
-                        flexDirection: "column",
-                        justifyContent: "space-around",
-                        transition: "opacity 0.3s ease, transform 0.3s ease",
-                        opacity: hoveredIndex === index ? 1 : 0,
-                        transform:
-                          hoveredIndex === index ? "scale(1)" : "scale(0.95)",
-                      }}
-                    >
-                      <Typography
-                        sx={{
-                          color: "gray",
-                          maxWidth: "22rem",
-                          textAlign: "justify",
-                          fontSize: { xs: "0.8rem", sm: "1rem" }, // Responsive font size
-                        }}
-                      >
-                        {/* A light and refreshing ale with citrusy notes, perfect for
-                      summer days. Brewed with the finest hops and a touch of
-                      honey for a smooth finish. */}
-                        {item.description}
-                      </Typography>
-                      <Grid container spacing={2}>
-                        <Grid item xs={6}>
-                          <Box>
-                            <Typography variant="body2" sx={{ color: "gray" }}>
-                              Bottle Size
-                            </Typography>
-                            <Typography variant="h6" sx={{ color: "#000" }}>
-                              {item.bottleSize}
-                            </Typography>
-                          </Box>
-                        </Grid>
-                        <Grid item xs={6}>
-                          <Box
-                            sx={{
-                              display: "flex",
-                              flexDirection: "column",
-                              justifyContent: "center",
-                              alignItems: "flex-end",
-                              textAlign: "left",
-                            }}
-                          >
-                            <Typography variant="body2" sx={{ color: "gray" }}>
-                              Release Date
-                            </Typography>
-                            <Typography variant="h6" sx={{ color: "#000" }}>
-                              {formattedDate}
-                            </Typography>
-                          </Box>
-                        </Grid>
-                      </Grid>
-                    </Box>
-                  ) : (
-                    <img
-                      src={cardImg}
-                      alt={cardImg}
-                      style={{
-                        width: "100%",
-                        height: "auto",
-                        marginTop: "0.7rem",
-                        transition: "transform 0.3s ease",
-                        borderRadius: "1rem",
-                      }}
-                    />
-                  )}
-                </Box>
-              </Grid>
-            );
-          })}
+                </Grid>
+              );
+            })
+          ) : (
+            <Box sx={{ width: "100%" }}>
+              <Typography
+                variant="h6"
+                color="#999"
+                sx={{
+                  fontSize: { xs: "1rem", sm: "1.2rem", md: "1.5rem" },
+                  textAlign: "center",
+                  mt: 4,
+                }}
+              >
+                No Brews...
+              </Typography>
+            </Box>
+          )}
         </Grid>
         <Grid
           container
@@ -729,10 +790,10 @@ const BrewCollection = () => {
                         },
                       }}
                     >
-                      <MenuItem value={10}>100ml</MenuItem>
-                      <MenuItem value={20}>250ml</MenuItem>
-                      <MenuItem value={30}>500ml</MenuItem>
-                      <MenuItem value={40}>1000ml</MenuItem>
+                      <MenuItem value={100}>100ml</MenuItem>
+                      <MenuItem value={250}>250ml</MenuItem>
+                      <MenuItem value={500}>500ml</MenuItem>
+                      <MenuItem value={1000}>1000ml</MenuItem>
                     </Select>
                   </FormControl>
                 </Box>
@@ -755,6 +816,37 @@ const BrewCollection = () => {
                   </LocalizationProvider>
                 </Box>
               </Box>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  backgroundColor: "red",
+                  mt: 2,
+                  borderRadius: 1,
+                }}
+              >
+                <Button
+                  fullWidth
+                  component="label"
+                  role={undefined}
+                  variant="contained"
+                  sx={{
+                    backgroundColor: "#FF6F61",
+                    "&:hover": { backgroundColor: "#FF6F61" },
+                  }}
+                  tabIndex={-1}
+                  startIcon={<CloudUploadIcon />}
+                >
+                  Upload Image
+                  <VisuallyHiddenInput
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImage}
+                  />
+                </Button>
+              </Box>
+
               <Box
                 display="flex"
                 justifyContent="space-around"

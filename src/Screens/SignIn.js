@@ -118,7 +118,12 @@ const SignIn = () => {
               navigation("/");
             }}
             variant="body2"
-            sx={{ color: "#6149CD", fontWeight: "600", ml: 1 }}
+            sx={{
+              color: "#6149CD",
+              fontWeight: "600",
+              ml: 1,
+              cursor: "pointer",
+            }}
           >
             Create an account
           </Typography>
@@ -313,8 +318,11 @@ const SignIn = () => {
                 }
               />
               <Typography
+                onClick={() => {
+                  navigation("/ForgetPassword");
+                }}
                 variant="body2"
-                sx={{ color: "#6149CD", fontWeight: "600" }}
+                sx={{ color: "#6149CD", fontWeight: "600", cursor: "pointer" }}
               >
                 Forget password?
               </Typography>
@@ -351,7 +359,12 @@ const SignIn = () => {
                 navigation("/");
               }}
               variant="body2"
-              sx={{ color: "#6149CD", fontWeight: "600", ml: 1 }}
+              sx={{
+                color: "#6149CD",
+                fontWeight: "600",
+                ml: 1,
+                cursor: "pointer",
+              }}
             >
               Create an account
             </Typography>
