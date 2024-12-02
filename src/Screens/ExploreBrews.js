@@ -423,8 +423,8 @@ const ExploreBrews = ({ route }) => {
                     </Box>
                   ) : (
                     <img
-                      src={cardImg}
-                      alt={cardImg}
+                      src={item.image}
+                      alt={item.image}
                       style={{
                         width: "100%",
                         height: "auto",

@@ -546,10 +546,10 @@ const BrewCollection = () => {
                     ) : (
                       <img
                         src={item.image}
-                        alt={allBrews.image}
+                        alt={item.image}
                         style={{
                           width: "100%",
-                          height: "30vh",
+                          height: "20vh",
                           maxHeight: "400px",
                           marginTop: "0.7rem",
                           transition: "transform 0.3s ease",
