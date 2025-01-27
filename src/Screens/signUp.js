@@ -435,7 +435,7 @@ const SignUp = () => {
             <Typography variant="body2">Already a member? </Typography>
             <Typography
               onClick={() => {
-                navigation("/SignIn");
+                navigation("/test");
               }}
               variant="body2"
               sx={{ color: "#6149CD", fontWeight: "600", ml: 1 }}
